@@ -335,7 +335,7 @@ btnGenerate.addEventListener("click", async () => {
   const url =
     mode === "ens"
       ? "https://prepconcours-ai-backend.onrender.com/generate-ens"
-      : "https://prepconcours-ai-backend.onrender.com";
+      : "https://prepconcours-ai-backend.onrender.com/generate";
 
   try {
     const res = await fetch(url, {
