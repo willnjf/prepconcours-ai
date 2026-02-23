@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVT Prep BAC D</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="logo-dot"></div>
+          <span>PrepConcours AI</span>
+        </div>
+
+        <div class="badges">
+          <span class="badge badge-bac" id="badgeBac">BAC</span>
+          <span class="badge badge-ens" id="badgeEns">ENS</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <h1>SVT Prep BAC D 🇨🇲</h1>
+      <p>Colle un chapitre de SVT, puis clique sur “Tester”.</p>
+
+      <!-- Choisir le mode-->
+      <div class="controls">
+        <label>
+          Mode
+          <select id="mode">
+            <option value="bac">BAC D (SVT)</option>
+            <option value="ens">ENS Yaoundé 2nd cycle (Biologie/SVT)</option>
+          </select>
+        </label>
+
+        <label>
+          Langue
+          <select id="lang">
+            <option value="fr">FR</option>
+            <option value="en">EN</option>
+          </select>
+        </label>
+      </div>
+
+      <textarea
+        id="inputText"
+        placeholder="Colle ton chapitre ici..."
+      ></textarea>
+
+      <!-- Button Generate -->
+      <button id="btnTest" type="button">Générer</button>
+      <p class="disclaimer">
+        ⚠️ Contenu généré par IA à titre indicatif. Consultez votre enseignant
+        pour validation.
+      </p>
+
+      <!--<div class="exam-bar">
+        <button id="btnStartExam">Démarrer l'examen (5 min)</button>
+        <span id="timer">⏱️ 05:00</span>
+      </div> -->
+
+      <main class="layout">
+        <!-- toutes tes sections ici -->
+        <section class="card">
+          <h2>Résumé</h2>
+          <p id="resume"></p>
+        </section>
+
+        <section class="card">
+          <h2>Points clés</h2>
+          <ul id="pointsCles"></ul>
+        </section>
+
+        <section class="card" id="ensPlanSection" style="display: none">
+          <h2>Plan de révision (7 jours) — ENS</h2>
+          <div id="ensPlan"></div>
+        </section>
+
+        <section class="card" id="ensPiegesSection" style="display: none">
+          <h2>Pièges fréquents — ENS</h2>
+          <ul id="ensPieges"></ul>
+        </section>
+
+        <section class="card" id="ensLongSection" style="display: none">
+          <h2>Questions longues type ENS</h2>
+          <div id="ensLong"></div>
+        </section>
+
+        <section class="card" id="ensBaremeSection" style="display: none">
+          <h2>Mini-barème ENS (simulation 20 pts)</h2>
+          <ul id="ensBareme"></ul>
+        </section>
+
+        <!-- Button Downloard -->
+        <button id="btnDownloadPdf" type="button" style="display: none">
+          📄 Télécharger le PDF ENS
+        </button>
+
+        <section class="card" id="ensExerciceSection" style="display: none">
+          <h2>Exercice type ENS + Corrigé</h2>
+          <div id="ensExercice"></div>
+        </section>
+
+        <section class="card">
+          <h2>Flashcards</h2>
+          <div id="flashcards" class="grid"></div>
+        </section>
+
+        <section class="card" id="qcmSection">
+          <h2>QCM</h2>
+          <div id="qcm"></div>
+          <button id="btnCorriger" type="button">Corriger</button>
+          <p id="score"></p>
+        </section>
+
+        <section class="card">
+          <h2>Mots-clés</h2>
+          <div id="motsCles" class="tags"></div>
+        </section>
+      </main>
+
+      <p id="status" class="status"></p>
+    </main>
+    <script src="./lang.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

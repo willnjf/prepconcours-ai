@@ -1,0 +1,36 @@
+{
+  "matiere": "SVT",
+  "niveau": "BAC D",
+  "annee": 2022,
+  "session": "Juin",
+  "source": "Exemple type BAC Cameroun",
+  "duree": "4 heures",
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "La division cellulaire",
+      "chapitres_couverts": ["mitose", "méiose"],
+      "enonce": "La cellule est l'unité de base du vivant. La mitose est une division cellulaire qui conserve le nombre de chromosomes. Expliquez les étapes de la mitose et son rôle dans la croissance.",
+      "bareme": 8
+    },
+    {
+      "numero": 2,
+      "titre": "La digestion",
+      "chapitres_couverts": ["digestion", "métabolisme"],
+      "enonce": "La digestion est la transformation des aliments en nutriments assimilables. Décrivez le trajet des aliments dans le tube digestif en précisant les transformations subies.",
+      "bareme": 6
+    },
+    {
+      "numero": 3,
+      "titre": "La génétique",
+      "chapitres_couverts": ["génétique", "hérédité"],
+      "enonce": "Les caractères héréditaires sont transmis des parents aux enfants via les gènes. Expliquez les lois de Mendel à travers un exemple de croisement.",
+      "bareme": 6
+    }
+  ],
+  "correction": {
+    "exercice1": "La mitose comporte 4 phases : prophase, métaphase, anaphase, télophase. Elle permet la croissance et le renouvellement cellulaire.",
+    "exercice2": "Les aliments passent par : bouche → oesophage → estomac → intestin grêle → gros intestin. Chaque étape transforme les aliments.",
+    "exercice3": "Loi de dominance : le caractère dominant s'exprime en F1. Loi de ségrégation : les allèles se séparent lors de la méiose."
+  }
+}

@@ -1,0 +1,488 @@
+/* ===== Base ===== */
+:root{
+  --bg: #0b1020;
+  --surface: #121a33;
+  --card: #0f1730;
+  --muted: rgba(255,255,255,0.7);
+  --text: rgba(255,255,255,0.92);
+  --border: rgba(255,255,255,0.12);
+  --accent: #4f8cff;
+  --accent2: #22c55e;
+  --danger: #ef4444;
+  --shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+*{ box-sizing: border-box; }
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(1200px 600px at 10% 0%, rgba(79,140,255,0.25), transparent 50%),
+              radial-gradient(900px 600px at 90% 20%, rgba(34,197,94,0.18), transparent 55%),
+              var(--bg);
+  color: var(--text);
+}
+
+.container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 22px 16px 42px;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 28px;
+  margin: 6px 0 6px;
+  letter-spacing: -0.4px;
+}
+p { color: var(--muted); line-height: 1.5; }
+
+/* ===== Controls ===== */
+.controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+
+.controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+select {
+  padding: 10px 12px;
+  font-size: 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  outline: none;
+}
+
+/* ===== Input ===== */
+textarea {
+  width: 100%;
+  min-height: 190px;
+  padding: 14px 14px;
+  margin: 12px 0;
+  font-size: 15px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  outline: none;
+  box-shadow: var(--shadow);
+}
+
+textarea::placeholder { color: rgba(255,255,255,0.45); }
+
+/* ===== Buttons ===== */
+button {
+  padding: 11px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  transition: transform .08s ease, background .15s ease, border-color .15s ease;
+}
+
+button:hover { background: rgba(255,255,255,0.12); }
+button:active { transform: translateY(1px); }
+
+#btnTest {
+  background: linear-gradient(135deg, rgba(79,140,255,0.9), rgba(79,140,255,0.55));
+  border-color: rgba(79,140,255,0.65);
+  box-shadow: 0 10px 24px rgba(79,140,255,0.18);
+}
+#btnTest:hover { background: linear-gradient(135deg, rgba(79,140,255,1), rgba(79,140,255,0.62)); }
+
+#btnCorriger {
+  background: linear-gradient(135deg, rgba(34,197,94,0.9), rgba(34,197,94,0.55));
+  border-color: rgba(34,197,94,0.65);
+  box-shadow: 0 10px 24px rgba(34,197,94,0.15);
+}
+#btnCorriger:hover { background: linear-gradient(135deg, rgba(34,197,94,1), rgba(34,197,94,0.62)); }
+
+/* PDF button if present */
+#btnDownloadPdf {
+  background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.10));
+}
+
+/* ===== Cards / Sections ===== */
+.card {
+  background: rgba(255,255,255,0.06);
+  padding: 14px 14px;
+  border-radius: 18px;
+  margin-top: 14px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.card h2{
+  margin: 0 0 10px;
+  font-size: 16px;
+  letter-spacing: -0.2px;
+}
+
+/* ===== Status ===== */
+.status {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+  color: var(--muted);
+}
+
+/* ===== Grid ===== */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 760px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ===== Flashcards / QCM blocks ===== */
+.flashcard {
+  background: rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+}
+
+.flashcard .answer {
+  margin-top: 10px;
+  display: none;
+  color: var(--muted);
+}
+
+.flashcard.open .answer { display: block; }
+
+/* Lists inside flashcards */
+.flashcard ul { margin: 10px 0 0 18px; color: var(--text); }
+.flashcard li { margin: 6px 0; }
+
+/* Radio look */
+input[type="radio"]{
+  transform: translateY(1px);
+  margin-right: 8px;
+}
+
+/* ===== Tags ===== */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ===== ENS Plan / Long Q ===== */
+.day, .longq {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.day h3, .longq h3 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.longq .sub {
+  margin-top: 10px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ===== Small polish ===== */
+a { color: var(--accent); }
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+/* ===== Compartiments / Espacements ===== */
+.card + .card {
+  margin-top: 18px;
+}
+
+.card h2 {
+  margin-bottom: 12px;
+}
+
+.card p {
+  margin: 8px 0 0;
+}
+
+.card ul {
+  padding-left: 18px;
+  margin: 10px 0 0;
+}
+
+.card li {
+  margin: 8px 0;
+}
+
+/* Boutons séparés */
+button {
+  margin-top: 10px;
+}
+
+/* flashcard */
+.flashcard + .flashcard,
+.day + .day,
+.longq + .longq {
+  margin-top: 12px;
+}
+
+/* ENS: meilleur layout (2 colonnes sur grand écran) */
+#ensPlanSection,
+#ensPiegesSection,
+#ensLongSection,
+#ensBaremeSection,
+#ensExerciceSection {
+  overflow: hidden;
+}
+
+@media (min-width: 980px) {
+  .container {
+    padding-top: 26px;
+  }
+
+  /* Les sections restent en 1 colonne, mais l'intérieur respire mieux */
+  .day, .longq, .flashcard {
+    padding: 14px;
+  }
+}
+
+/* ===== Topbar ===== */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 15, 35, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.logo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+/* Badges */
+.badges {
+  display: flex;
+  gap: 8px;
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  opacity: 0.5;
+  transition: 0.3s ease;
+}
+
+.badge.active {
+  opacity: 1;
+  border-color: var(--accent);
+  background: rgba(79,140,255,0.2);
+}
+
+.badge-ens.active {
+  border-color: var(--accent2);
+  background: rgba(34,197,94,0.2);
+}
+
+/* ===== Layout 2 colonnes ===== */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+@media (min-width: 1100px) {
+  .layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #qcm {
+    grid-column: span 2;
+  }
+}
+
+/* ===== Layout pro : colonnes équilibrées ===== */
+.layout {
+  display: block;
+  margin-top: 18px;
+}
+
+.layout > .card {
+  margin-top: 16px;
+}
+
+/* ===== Layout : 1 colonne partout ===== */
+.layout {
+  display: block;
+  margin-top: 18px;
+}
+
+.layout > .card {
+  margin-top: 16px;
+}
+
+
+  /* Les sections QCM (la CARD qui contient le QCM) doit prendre 2 colonnes */
+  #qcmSection {
+    grid-column: 1 / -1;
+  }
+
+
+/* ===== QCM : rendu lisible ===== */
+#qcm .flashcard {
+  padding: 14px;
+}
+
+#qcm .flashcard strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+#qcm ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+#qcm li {
+  margin: 10px 0;
+}
+
+#qcm label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+#qcm input[type="radio"]{
+  margin-top: 2px;
+}
+
+/* ===== Résultat correction (pro) ===== */
+.flashcard.correct {
+  border-color: rgba(34,197,94,0.75);
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.18);
+}
+
+.flashcard.wrong {
+  border-color: rgba(239,68,68,0.70);
+  box-shadow: 0 0 0 2px rgba(239,68,68,0.16);
+}
+
+
+
+
+
+
+/* ===== PRO 1-colonne : lisibilité ===== */
+
+/* Largeur confortable (évite les lignes trop longues) */
+.container {
+  max-width: 860px;
+}
+
+/* Espace entre les sections */
+.card {
+  padding: 16px;
+}
+.card + .card {
+  margin-top: 16px;
+}
+
+/* Titres plus nets */
+.card h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+/* Paragraphes / listes respirent */
+.card p { margin: 8px 0 0; }
+.card ul { margin: 10px 0 0; padding-left: 18px; }
+.card li { margin: 8px 0; }
+
+/* QCM : options alignées (sans casser le reste) */
+#qcm .flashcard {
+  padding: 14px;
+}
+
+#qcm ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 10px 0 0;
+}
+
+#qcm li { margin: 10px 0; }
+
+#qcm label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  line-height: 1.35;
+}
+
+#qcm input[type="radio"] { margin-top: 2px; }
+
+.disclaimer {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  border-left: 3px solid rgba(255, 165, 0, 0.6);
+  padding-left: 10px;
+  margin: 8px 0;
+}
+
