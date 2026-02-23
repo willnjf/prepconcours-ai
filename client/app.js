@@ -334,8 +334,8 @@ btnGenerate.addEventListener("click", async () => {
 
   const url =
     mode === "ens"
-      ? "http://localhost:3000/generate-ens"
-      : "http://localhost:3000/generate";
+      ? "https://prepconcours-ai-backend.onrender.com"
+      : "https://prepconcours-ai-backend.onrender.com";
 
   try {
     const res = await fetch(url, {
@@ -392,7 +392,7 @@ btnCorriger.addEventListener("click", () => {
 // =========== Event downloard pdf ==========
 btnDownloadPdf.addEventListener("click", async () => {
   try {
-    const res = await fetch("http://localhost:3000/export-ens-pdf", {
+    const res = await fetch("https://prepconcours-ai-backend.onrender.com/export-ens-pdf", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

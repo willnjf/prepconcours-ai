@@ -387,7 +387,7 @@ app.post("/export-ens-pdf", async (req, res) => {
       return res.status(400).json({ error: "Body JSON ENS manquant." });
     }
 
-    // Headers de téléchargement
+    // ======= Headers de téléchargement =======
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
