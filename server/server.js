@@ -135,7 +135,7 @@ app.post("/generate", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 100)) {
+    if (!checkLimit(anonymousId, "generate", 8)) {
       return res.status(429).json({ error: "Limite atteinte aujourd'hui." });
     }
 
@@ -243,7 +243,7 @@ app.post("/generate-ens", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 100)) {
+    if (!checkLimit(anonymousId, "generate", 8)) {
       return res.status(429).json({ error: "Limite atteinte aujourd'hui." });
     }
 
@@ -353,7 +353,7 @@ Texte à analyser:
 
     try {
       json = extractJsonOrThrow(raw);
-      // ===Sauvegarde dans le cache === /
+      // === Sauvegarde dans le cache === /
       cache[cacheKey] = json;
       writeCache(cache);
     } catch (e) {
@@ -370,12 +370,12 @@ Texte à analyser:
   }
 });
 
-// Export PDF ENS
+// ===== Export PDF ENS =====
 app.post("/export-ens-pdf", async (req, res) => {
   try {
     const { anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "pdf", 5)) {
+    if (!checkLimit(anonymousId, "pdf", 3)) {
       return res
         .status(429)
         .json({ error: "Limite PDF atteinte aujourd'hui." });
