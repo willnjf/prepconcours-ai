@@ -1,4 +1,6 @@
 // ====== Éléments UI ======
+let lastBacData = null;
+let lastEnsData = null;
 const inputText = document.getElementById("inputText");
 const btnGenerate = document.getElementById("btnTest");
 
@@ -34,6 +36,11 @@ const btnDownloadPdf = document.getElementById("btnDownloadPdf");
 
 const badgeBac = document.getElementById("badgeBac");
 const badgeEns = document.getElementById("badgeEns");
+
+const btnDownloadBacPdf = document.getElementById("btnDownloadBacPdf");
+
+const bacExerciceSection = document.getElementById("bacExerciceSection");
+const bacExerciceEl = document.getElementById("bacExercice");
 
 // ====== id ========
 function getOrCreateAnonymousId() {
@@ -83,11 +90,20 @@ function clearUI() {
   motsClesEl.innerHTML = "";
   statusEl.textContent = "";
   scoreEl.textContent = "";
+  bacExerciceSection.style.display = "none";
+  bacExerciceEl.innerHTML = "";
   currentQCM = [];
 }
 
 // ====== Rendu BAC / ENS ======
 function render(data) {
+  if (currentMode === "ens") {
+    lastEnsData = data;
+  }
+
+  if (currentMode === "bac") {
+    lastBacData = data;
+  }
   // ====== Résumé / Points / Flashcards / Mots-clés (BAC) ======
   // Pour ENS, ces champs n’existent pas forcément, donc on garde un fallback.
   const resumeText = data.resume || data.resume_oriente_ens || "";
@@ -295,17 +311,71 @@ function render(data) {
   `;
   }
 
+  // ====== BAC: Exercice type examen ======
+  if (currentMode === "bac" && data.exercice_type_bac) {
+    bacExerciceSection.style.display = "block";
+    bacExerciceEl.innerHTML = "";
+
+    const ex = data.exercice_type_bac;
+    const s = (v) => (v == null ? "" : String(v));
+
+    let html = `
+    <div class="longq">
+      <h3>Consigne</h3>
+      <p>${s(ex.consigne)}</p>
+
+      <h3>Enoncé</h3>
+      <p>${s(ex.enonce)}</p>
+
+      <h3>Questions</h3>
+      <ol>
+        ${(ex.questions || [])
+          .map(
+            (q) => `
+          <li>
+            ${s(q.question)}
+            <em style="color: var(--accent)"> (${s(q.bareme)} pts)</em>
+          </li>
+        `,
+          )
+          .join("")}
+      </ol>
+
+      <h3>Corrigé</h3>
+      <ol>
+        ${(ex.corrige?.reponses || [])
+          .map(
+            (r) => `
+          <li>${s(r.reponse)}</li>
+        `,
+          )
+          .join("")}
+      </ol>
+
+      <p>
+        <strong style="color: var(--accent2)">
+          Barème total : ${s(ex.corrige?.bareme_total)} pts
+        </strong>
+      </p>
+    </div>
+  `;
+
+    bacExerciceEl.innerHTML = html;
+  } else if (currentMode === "bac") {
+    bacExerciceSection.style.display = "none";
+  }
+
   if (currentMode === "ens") {
     btnDownloadPdf.style.display = "inline-block";
+    btnDownloadBacPdf.style.display = "none";
   } else {
     btnDownloadPdf.style.display = "none";
+    btnDownloadBacPdf.style.display = "inline-block";
   }
 }
 
 // ====== Générer ======
 btnGenerate.addEventListener("click", async () => {
-  /*e.preventDefault();
-  e.stopPropagation();*/
   clearUI();
   statusEl.textContent = "⏳ Génération IA en cours...";
 
@@ -313,15 +383,7 @@ btnGenerate.addEventListener("click", async () => {
 
   const mode = modeEl.value; // "bac" ou "ens"
   const language = langEl.value; // "fr" ou "en"
-  // Applique la langue au chargement
-  /*document.addEventListener("DOMContentLoaded", () => {
-    applyLanguage(langEl.value);
-  });
 
-  // Applique la langue quand l'étudiant change
-  langEl.addEventListener("change", () => {
-    applyLanguage(langEl.value);
-  });*/
   currentMode = mode;
 
   if (currentMode === "bac") {
@@ -347,7 +409,13 @@ btnGenerate.addEventListener("click", async () => {
     const data = await res.json();
 
     if (!res.ok) {
-      statusEl.textContent = "❌ Erreur: " + (data.error || "inconnue");
+      if (res.status === 429) {
+        statusEl.textContent = "⛔ " + (data.error || "Limite atteinte.");
+        statusEl.style.color = "#ef4444";
+        statusEl.style.borderColor = "rgba(239,68,68,0.5)";
+      } else {
+        statusEl.textContent = "❌ Erreur: " + (data.error || "inconnue");
+      }
       return;
     }
 
@@ -376,13 +444,13 @@ btnCorriger.addEventListener("click", () => {
 
     if (isCorrect) score++;
 
-    // Appliquer style pro (classes CSS)
+    // ===== Appliquer style pro (classes CSS) ======
     if (box) {
       box.classList.remove("correct", "wrong");
       box.classList.add(isCorrect ? "correct" : "wrong");
     }
 
-    // Révéler l'explication après correction
+    // ======== Révéler l'explication après correction ========
     if (exp) exp.style.display = "block";
   });
 
@@ -392,33 +460,81 @@ btnCorriger.addEventListener("click", () => {
 // =========== Event downloard pdf ==========
 btnDownloadPdf.addEventListener("click", async () => {
   try {
-    const res = await fetch("https://prepconcours-ai-backend.onrender.com/export-ens-pdf", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        anonymousId,
-        resume_oriente_ens: resumeEl.textContent,
-        notions_a_maitriser: Array.from(pointsEl.querySelectorAll("li")).map(
-          (li) => li.textContent,
-        ),
-      }),
-    });
+    if (!lastEnsData) {
+      alert("Génère d'abord une fiche ENS !");
+      return;
+    }
+
+    const res = await fetch(
+      "https://prepconcours-ai-backend.onrender.com/export-ens-pdf",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          anonymousId,
+          ...lastEnsData,
+        }),
+      },
+    );
 
     if (!res.ok) {
-      alert("Erreur génération PDF");
+      const errData = await res.json();
+      if (res.status === 429) {
+        alert("⛔ " + (errData.error || "Limite PDF atteinte."));
+      } else {
+        alert("❌ Erreur génération PDF");
+      }
       return;
     }
 
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
-
     const a = document.createElement("a");
     a.href = url;
-    a.download = "ENS_Biologie.pdf";
+    a.download = "ENS_PrepConcours.pdf";
     document.body.appendChild(a);
     a.click();
     a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+    alert("Erreur réseau");
+  }
+});
 
+// =========== Téléchargement PDF BAC ===========
+btnDownloadBacPdf.addEventListener("click", async () => {
+  try {
+    if (!lastBacData) {
+      alert("Génère d'abord une fiche BAC !");
+      return;
+    }
+
+    const res = await fetch(
+      "https://prepconcours-ai-backend.onrender.com/export-bac-pdf",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          anonymousId,
+          ...lastBacData,
+        }),
+      },
+    );
+
+    if (!res.ok) {
+      alert("Erreur génération PDF BAC");
+      return;
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "BAC_PrepConcours.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
     window.URL.revokeObjectURL(url);
   } catch (err) {
     console.error(err);

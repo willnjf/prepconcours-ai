@@ -56,11 +56,6 @@
         pour validation.
       </p>
 
-      <!--<div class="exam-bar">
-        <button id="btnStartExam">Démarrer l'examen (5 min)</button>
-        <span id="timer">⏱️ 05:00</span>
-      </div> -->
-
       <main class="layout">
         <!-- toutes tes sections ici -->
         <section class="card">
@@ -93,9 +88,13 @@
           <ul id="ensBareme"></ul>
         </section>
 
-        <!-- Button Downloard -->
+        <!-- Button Downloard pdf -->
         <button id="btnDownloadPdf" type="button" style="display: none">
           📄 Télécharger le PDF ENS
+        </button>
+
+        <button id="btnDownloadBacPdf" style="display: none">
+          📄 Télécharger le PDF BAC D
         </button>
 
         <section class="card" id="ensExerciceSection" style="display: none">
@@ -106,6 +105,11 @@
         <section class="card">
           <h2>Flashcards</h2>
           <div id="flashcards" class="grid"></div>
+        </section>
+
+        <section class="card" id="bacExerciceSection" style="display: none">
+          <h2>Exercice type Examen BAC D</h2>
+          <div id="bacExercice"></div>
         </section>
 
         <section class="card" id="qcmSection">

@@ -135,8 +135,8 @@ app.post("/generate", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 8)) {
-      return res.status(429).json({ error: "Limite atteinte aujourd'hui." });
+    if (!checkLimit(anonymousId, "generate", 3)) {
+      return res.status(429).json({ error: "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée." });
     }
 
     if (!requireApiKey(res)) return;
@@ -171,31 +171,63 @@ ${langInstruction}
 
 {
   "resume": {
-  "definition": "2-3 lignes de définition du thème",
-  "mecanismes": ["mécanisme 1", "mécanisme 2", "mécanisme 3"],
-  "schemas_importants": [
-  {
-    "titre": "Nom du schéma",
-    "instructions": "Ce que l'élève doit dessiner exactement",
-    "elements_obligatoires": ["élément 1", "élément 2", "élément 3"]
+    "definition": "2-3 lignes de définition du thème",
+    "mecanismes": ["mécanisme 1", "mécanisme 2", "mécanisme 3"],
+    "schemas_importants": [
+      {
+        "titre": "Nom du schéma",
+        "instructions": "Ce que l'élève doit dessiner exactement",
+        "elements_obligatoires": ["élément 1", "élément 2", "élément 3"]
+      }
+    ],
+    "mots_cles_scientifiques": ["mot 1", "mot 2", "mot 3"],
+    "conclusion": "2-3 lignes de synthèse"
+  },
+  "points_cles": ["point 1", "point 2", "point 3"],
+  "flashcards": [
+    {"q": "question 1", "a": "réponse 1"},
+    {"q": "question 2", "a": "réponse 2"}
+  ],
+  "qcm": [
+    {
+      "question": "question 1",
+      "options": ["option A", "option B", "option C", "option D"],
+      "bonne_reponse": "A",
+      "explication": "explication 1"
+    }
+  ],
+  "mots_cles": ["mot 1", "mot 2", "mot 3"],
+  "exercice_type_bac": {
+    "consigne": "consigne de l'exercice",
+    "enonce": "énoncé de l'exercice",
+    "questions": [
+      {"numero": 1, "question": "question 1", "bareme": 2},
+      {"numero": 2, "question": "question 2", "bareme": 3},
+      {"numero": 3, "question": "question 3", "bareme": 3}
+    ],
+    "corrige": {
+      "reponses": [
+        {"numero": 1, "reponse": "réponse détaillée 1"},
+        {"numero": 2, "reponse": "réponse détaillée 2"},
+        {"numero": 3, "reponse": "réponse détaillée 3"}
+      ],
+      "bareme_total": 8
+    }
   }
-],
-  "conclusion": "2-3 lignes de synthèse"
-},
-  "points_cles": ["..."],
-  "flashcards": [{"q":"...", "a":"..."}],
-  "qcm": [{"question":"...", "options":["A","B","C","D"], "bonne_reponse":"A", "explication":"..."}],
-  "mots_cles": ["..."]
 }
 
 Règles:
 - Écris en ${language === "en" ? "simple English adapted for Cameroonian students" : "français simple adapté aux élèves camerounais"}.
 - QCM: exactement 5 questions, 4 options chacune.
 - Flashcards: exactement 5.
-- Reste fidèle au texte fourni, ne invente pas de contenu hors du texte.
+- exercice_type_bac: 1 exercice avec 3 questions basé sur le style BAC D Cameroun.
+- Questions du plus simple au plus complexe.
+- Corrigé détaillé et pédagogique.
+- Reste fidèle au texte fourni.
 - Ne mets aucun texte en dehors du JSON.
 
 ${sujetsContext}
+
 Texte:
 """${String(text).trim()}"""
 `.trim();
@@ -243,8 +275,8 @@ app.post("/generate-ens", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 8)) {
-      return res.status(429).json({ error: "Limite atteinte aujourd'hui." });
+    if (!checkLimit(anonymousId, "generate", 3)) {
+      return res.status(429).json({ error: "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée." });
     }
 
     if (!requireApiKey(res)) return;
@@ -280,16 +312,17 @@ Réponds STRICTEMENT en JSON valide avec ce format EXACT (aucun texte hors JSON)
 
 {
   "resume": {
-  "definition": "2-5 lignes de définition du thème",
-  "mecanismes": ["mécanisme 1", "mécanisme 2", "mécanisme 3"],
+  "definition": "2-5 lignes",
+  "mecanismes": ["mécanisme 1", "mécanisme 2"],
   "schemas_importants": [
-  {
-    "titre": "Nom du schéma",
-    "instructions": "Ce que l'élève doit dessiner exactement",
-    "elements_obligatoires": ["élément 1", "élément 2", "élément 3"]
-  }
-    "conclusion": "2-5 lignes de synthèse"
-],
+    {
+      "titre": "Nom du schéma",
+      "instructions": "Ce que l'élève doit dessiner",
+      "elements_obligatoires": ["élément 1", "élément 2"]
+    }
+  ],
+  "conclusion": "2-5 lignes de synthèse"
+},
   "notions_a_maitriser": ["..."],
   "pieges_frequents": ["..."],
   "plan_revision_7j": [
@@ -325,7 +358,8 @@ Contraintes:
 - qcm: exactement 10 questions (4 options).
 - questions_type_ens: exactement 2.
 - plan_revision_7j: exactement 7 jours.
-- exercice_type: 1 exercice + corrigé fidèle au texte fourni.
+- exercice_type: 1 exercice + corrigé, qui doit être détaillé et pédagogique..
+- Reste fidèle au texte fourni, ne invente pas de contenu hors du texte.
 - Signale toute information incertaine avec [À VÉRIFIER].
 - Ne mets aucun texte en dehors du JSON.
 
@@ -373,96 +407,497 @@ Texte à analyser:
 // ===== Export PDF ENS =====
 app.post("/export-ens-pdf", async (req, res) => {
   try {
-    const { anonymousId } = req.body;
+    const data = req.body;
+    const { anonymousId } = data;
 
-    if (!checkLimit(anonymousId, "pdf", 3)) {
+    console.log("DATA RECU:", JSON.stringify(data).slice(0, 300));
+
+    if (!checkLimit(anonymousId, "pdf", 1)) {
       return res
         .status(429)
-        .json({ error: "Limite PDF atteinte aujourd'hui." });
+        .json({ error: "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée." });
     }
 
-    const data = req.body;
-
-    if (!data || typeof data !== "object") {
+    if (!data || !data.resume) {
       return res.status(400).json({ error: "Body JSON ENS manquant." });
     }
 
-    // ======= Headers de téléchargement =======
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
       'attachment; filename="ENS_Biologie_Plan.pdf"',
     );
 
-    const doc = new PDFDocument({ margin: 50 });
+    const doc = new PDFDocument({ margin: 50, size: "A4" });
     doc.pipe(res);
 
-    // Helpers PDF
     const safe = (v) => (v == null ? "" : String(v));
-    const addTitle = (t) =>
-      doc.fontSize(18).text(t, { underline: true }).moveDown(0.6);
-    const addH2 = (t) => doc.fontSize(13).text(t).moveDown(0.3);
-    const addPara = (t) => doc.fontSize(11).text(t).moveDown(0.6);
-    const addBullets = (items) => {
-      (items || []).forEach((x) => doc.fontSize(11).text(`• ${safe(x)}`));
-      doc.moveDown(0.6);
-    };
 
-    // Contenu PDF
-    addTitle("ENS Yaounde (2nd cycle) — Biologie/SVT");
-    addPara(`Généré le : ${new Date().toLocaleString("fr-FR")}`);
+    // ====== Couleurs ======
+    const BLEU = "#1a3a6b";
+    const VERT = "#1a6b3a";
+    const GRIS = "#f5f5f5";
+    const NOIR = "#222222";
 
-    addH2("Résumé orienté ENS");
-    addPara(safe(data.resume_oriente_ens || data.resume));
+    // ====== Helpers ======
+    const pageWidth = doc.page.width - 100;
 
-    addH2("Notions à maîtriser");
-    addBullets(data.notions_a_maitriser || data.points_cles);
+    function addPageNumber() {
+      const range = doc.bufferedPageRange();
+      for (let i = 0; i < range.count; i++) {
+        doc.switchToPage(range.start + i);
+        doc
+          .fontSize(9)
+          .fillColor("#999999")
+          .text(`PrepConcours AI — Page ${i + 1}`, 50, doc.page.height - 40, {
+            align: "center",
+            width: pageWidth,
+          });
+      }
+    }
 
-    addH2("Plan de révision (7 jours)");
-    (data.plan_revision_7j || []).forEach((d) => {
-      doc.fontSize(11).text(`Jour ${safe(d.jour)} — ${safe(d.objectif)}`);
-      (d.taches || []).forEach((t) => doc.fontSize(11).text(`   - ${safe(t)}`));
-      doc.moveDown(0.4);
-    });
-    doc.moveDown(0.4);
-
-    addH2("Pièges fréquents");
-    addBullets(data.pieges_frequents);
-
-    addH2("Questions longues type ENS");
-    (data.questions_type_ens || []).forEach((q, i) => {
+    function addPageGarde() {
+      doc.rect(0, 0, doc.page.width, 200).fill(BLEU);
+      doc
+        .fillColor("white")
+        .fontSize(26)
+        .text("PrepConcours AI", 50, 60, { align: "center", width: pageWidth });
+      doc.fontSize(16).text("Concours ENS Yaoundé — 2nd Cycle", 50, 100, {
+        align: "center",
+        width: pageWidth,
+      });
       doc
         .fontSize(11)
-        .text(`${i + 1}) ${safe(q.question)}`)
-        .moveDown(0.2);
+        .text(`Généré le : ${new Date().toLocaleString("fr-FR")}`, 50, 135, {
+          align: "center",
+          width: pageWidth,
+        });
+      doc.moveDown(6);
+    }
 
-      doc.fontSize(11).text("Attendus :");
+    function addSectionTitle(titre) {
+      doc.moveDown(1.5);
+      const y = doc.y;
+      doc.rect(48, y, pageWidth + 4, 30).fill(BLEU);
+      doc
+        .fillColor("white")
+        .fontSize(12)
+        .font("Helvetica-Bold")
+        .text(titre.toUpperCase(), 58, y + 8);
+      doc.fillColor(NOIR).font("Helvetica");
+      doc.moveDown(1.2);
+    }
+
+    function addSubTitle(titre) {
+      doc.moveDown(0.5);
+      doc
+        .fillColor(VERT)
+        .fontSize(11)
+        .font("Helvetica-Bold")
+        .text(titre)
+        .font("Helvetica")
+        .fillColor(NOIR)
+        .moveDown(0.4);
+    }
+
+    function addPara(texte) {
+      doc
+        .fontSize(10)
+        .fillColor(NOIR)
+        .text(safe(texte), {
+          align: "justify",
+          lineGap: 3,
+          width: pageWidth,
+        })
+        .moveDown(0.8);
+    }
+
+    function addBullets(items) {
+      (items || []).forEach((x) => {
+        doc
+          .fontSize(10)
+          .fillColor(NOIR)
+          .text(`• ${safe(x)}`, {
+            indent: 15,
+            lineGap: 3,
+            width: pageWidth - 15,
+          });
+        doc.moveDown(0.2);
+      });
+      doc.moveDown(0.6);
+    }
+
+    // ====== Page de garde ======
+    addPageGarde();
+
+    // ====== Résumé ======
+    addSectionTitle("RESUME ORIENTE ENS");
+
+    const resume = data.resume_oriente_ens || data.resume;
+
+    console.log("TYPE RESUME:", typeof resume);
+    console.log("RESUME:", JSON.stringify(resume).slice(0, 200));
+
+    if (typeof resume === "object" && resume !== null) {
+      addSubTitle("Definition");
+      addPara(safe(resume.definition));
+
+      addSubTitle("Mecanismes essentiels");
+      addBullets(resume.mecanismes || []);
+
+      addSubTitle("Schemas importants a realiser");
+      (resume.schemas_importants || []).forEach((s) => {
+        if (typeof s === "object") {
+          doc.fontSize(10).text(`• ${safe(s.titre)}`);
+          doc.fontSize(10).text(`  ${safe(s.instructions)}`, { indent: 10 });
+          doc
+            .fontSize(10)
+            .text(
+              `  Elements : ${(s.elements_obligatoires || []).join(", ")}`,
+              { indent: 10 },
+            );
+        } else {
+          doc.fontSize(10).text(`• ${safe(s)}`);
+        }
+        doc.moveDown(0.3);
+      });
+
+      const motsCles =
+        resume.mots_cles_scientifiques ||
+        resume.mots_cles ||
+        data.mots_cles ||
+        [];
+      if (motsCles.length > 0) {
+        addSubTitle("Mots-cles scientifiques");
+        addPara(motsCles.join(", "));
+      }
+
+      addSubTitle("Conclusion");
+      addPara(safe(resume.conclusion));
+    } else {
+      addPara(safe(resume));
+    }
+    // ====== Notions ======
+    addSectionTitle("Notions à maîtriser");
+    addBullets(data.notions_a_maitriser || data.points_cles);
+
+    // ====== Plan 7 jours ======
+    addSectionTitle("Plan de révision — 7 jours");
+    (data.plan_revision_7j || []).forEach((d) => {
+      addSubTitle(`Jour ${safe(d.jour)} — ${safe(d.objectif)}`);
+      (d.taches || []).forEach((t) => {
+        doc.fontSize(10).text(`   - ${safe(t)}`);
+      });
+      doc.moveDown(0.4);
+    });
+
+    // ====== Pièges ======
+    addSectionTitle("Pièges fréquents");
+    addBullets(data.pieges_frequents);
+
+    // ====== Questions longues ======
+    addSectionTitle("Questions longues type ENS");
+    (data.questions_type_ens || []).forEach((q, i) => {
+      addSubTitle(`${i + 1}. ${safe(q.question)}`);
+      doc.fontSize(10).text("Attendus :");
       (q.attendus || []).forEach((a) =>
-        doc.fontSize(11).text(`   • ${safe(a)}`),
+        doc.fontSize(10).text(`   • ${safe(a)}`),
       );
-
       doc.moveDown(0.2);
-      doc.fontSize(11).text("Plan de réponse :");
+      doc.fontSize(10).text("Plan de réponse :");
       (q.plan_reponse || []).forEach((p) =>
-        doc.fontSize(11).text(`   - ${safe(p)}`),
+        doc.fontSize(10).text(`   - ${safe(p)}`),
       );
-
       doc.moveDown(0.6);
     });
 
-    addH2("Mini-barème (simulation /20)");
+    // ====== Barème ======
+    addSectionTitle("Mini-barème (simulation /20)");
     (data.mini_bareme || []).forEach((b) => {
-      doc.fontSize(11).text(`• ${safe(b.element)} — ${safe(b.points)} pts`);
+      doc.fontSize(10).text(`• ${safe(b.element)} — ${safe(b.points)} pts`);
     });
     doc.moveDown(0.6);
 
+    // ====== Exercice ======
+    if (data.exercice_type) {
+      addSectionTitle("Exercice type ENS + Corrigé");
+      addSubTitle("Énoncé");
+      addPara(safe(data.exercice_type.enonce));
+      addSubTitle("Corrigé");
+      (data.exercice_type?.corrige?.etapes || []).forEach((e) => {
+        doc.fontSize(10).text(`• ${safe(e)}`);
+      });
+      doc.moveDown(0.3);
+      doc
+        .fontSize(10)
+        .fillColor(VERT)
+        .text(`Résultat : ${safe(data.exercice_type?.corrige?.resultat)}`)
+        .fillColor(NOIR);
+    }
+
+    // ====== Pied de page ======
+    doc.moveDown(1);
     doc
-      .fontSize(10)
-      .text("Bon courage pour le concours !", { align: "center" });
+      .fontSize(9)
+      .fillColor("#999999")
+      .text(
+        "ATTENTION : Contenu généré par IA — A valider avec votre enseignant",
+        {
+          align: "center",
+          width: pageWidth,
+        },
+      );
+
+    // ====== Numérotation ======
+    doc.flushPages();
+    addPageNumber();
+
     doc.end();
   } catch (err) {
     console.error("❌ /export-ens-pdf error:", err);
     return res.status(500).json({ error: err.message || "Erreur PDF" });
+  }
+});
+
+// ===== Export PDF BAC =====
+app.post("/export-bac-pdf", async (req, res) => {
+  try {
+    const data = req.body;
+    const { anonymousId } = data;
+
+    console.log("DATA BAC RECU:", JSON.stringify(data).slice(0, 300));
+
+    if (!checkLimit(anonymousId, "pdf", 1)) {
+      return res
+        .status(429)
+        .json({ error: "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée." });
+    }
+
+    if (!data || !data.resume) {
+      return res.status(400).json({ error: "Body JSON BAC manquant." });
+    }
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="BAC_PrepConcours.pdf"',
+    );
+
+    const doc = new PDFDocument({ margin: 50, size: "A4" });
+    doc.pipe(res);
+
+    const safe = (v) => (v == null ? "" : String(v));
+    const BLEU = "#1a3a6b";
+    const VERT = "#1a6b3a";
+    const NOIR = "#222222";
+    const pageWidth = doc.page.width - 100;
+
+    // ====== Helpers ======
+    function addPageNumber() {
+      const range = doc.bufferedPageRange();
+      for (let i = 0; i < range.count; i++) {
+        doc.switchToPage(range.start + i);
+        doc
+          .fontSize(9)
+          .fillColor("#999999")
+          .text(`PrepConcours AI — Page ${i + 1}`, 50, doc.page.height - 40, {
+            align: "center",
+            width: pageWidth,
+          });
+      }
+    }
+
+    function addPageGarde() {
+      doc.rect(0, 0, doc.page.width, 200).fill(BLEU);
+      doc
+        .fillColor("white")
+        .fontSize(26)
+        .font("Helvetica-Bold")
+        .text("PrepConcours AI", 50, 60, { align: "center", width: pageWidth });
+      doc.fontSize(16).text("BAC D — Fiche de Révision", 50, 100, {
+        align: "center",
+        width: pageWidth,
+      });
+      doc
+        .fontSize(11)
+        .font("Helvetica")
+        .text(`Généré le : ${new Date().toLocaleString("fr-FR")}`, 50, 135, {
+          align: "center",
+          width: pageWidth,
+        });
+      doc.moveDown(6);
+    }
+
+    function addSectionTitle(titre) {
+      doc.moveDown(1.5);
+      const y = doc.y;
+      doc.rect(48, y, pageWidth + 4, 30).fill(BLEU);
+      doc
+        .fillColor("white")
+        .fontSize(12)
+        .font("Helvetica-Bold")
+        .text(titre.toUpperCase(), 58, y + 8);
+      doc.fillColor(NOIR).font("Helvetica");
+      doc.moveDown(1.2);
+    }
+
+    function addSubTitle(titre) {
+      doc.moveDown(0.5);
+      doc
+        .fillColor(VERT)
+        .fontSize(11)
+        .font("Helvetica-Bold")
+        .text(titre)
+        .font("Helvetica")
+        .fillColor(NOIR)
+        .moveDown(0.4);
+    }
+
+    function addPara(texte) {
+      doc
+        .fontSize(10)
+        .fillColor(NOIR)
+        .text(safe(texte), { align: "justify", lineGap: 3, width: pageWidth })
+        .moveDown(0.8);
+    }
+
+    function addBullets(items) {
+      (items || []).forEach((x) => {
+        doc
+          .fontSize(10)
+          .fillColor(NOIR)
+          .text(`• ${safe(x)}`, {
+            indent: 15,
+            lineGap: 3,
+            width: pageWidth - 15,
+          });
+        doc.moveDown(0.2);
+      });
+      doc.moveDown(0.6);
+    }
+
+    // ====== Page de garde ======
+    addPageGarde();
+
+    // ====== Résumé ======
+    addSectionTitle("Resume");
+
+    const resume = data.resume;
+
+    if (typeof resume === "object" && resume !== null) {
+      addSubTitle("Definition");
+      addPara(safe(resume.definition));
+
+      addSubTitle("Mecanismes essentiels");
+      addBullets(resume.mecanismes || []);
+
+      addSubTitle("Schemas importants a realiser");
+      (resume.schemas_importants || []).forEach((s) => {
+        if (typeof s === "object") {
+          doc
+            .fontSize(10)
+            .font("Helvetica-Bold")
+            .text(`• ${safe(s.titre)}`)
+            .font("Helvetica");
+          doc.fontSize(10).text(`  ${safe(s.instructions)}`, { indent: 10 });
+          doc
+            .fontSize(10)
+            .text(
+              `  Elements : ${(s.elements_obligatoires || []).join(", ")}`,
+              { indent: 10 },
+            );
+        } else {
+          doc.fontSize(10).text(`• ${safe(s)}`);
+        }
+        doc.moveDown(0.4);
+      });
+
+      const motsCles =
+        resume.mots_cles_scientifiques ||
+        resume.mots_cles ||
+        data.mots_cles ||
+        [];
+      if (motsCles.length > 0) {
+        addSubTitle("Mots-cles scientifiques");
+        addPara(motsCles.join(", "));
+      }
+
+      addSubTitle("Conclusion");
+      addPara(safe(resume.conclusion));
+    } else {
+      addPara(safe(resume));
+    }
+
+    // ====== Points clés ======
+    addSectionTitle("Points cles");
+    addBullets(data.points_cles || []);
+
+    // ====== Flashcards ======
+    addSectionTitle("Flashcards");
+    (data.flashcards || []).forEach((card, i) => {
+      addSubTitle(`${i + 1}. ${safe(card.q)}`);
+      doc
+        .fontSize(10)
+        .fillColor(VERT)
+        .text(`Reponse : ${safe(card.a)}`, {
+          indent: 15,
+          lineGap: 3,
+          width: pageWidth - 15,
+        })
+        .fillColor(NOIR);
+      doc.moveDown(0.5);
+    });
+
+    // ====== QCM ======
+    addSectionTitle("QCM avec corrections");
+    (data.qcm || []).forEach((q, i) => {
+      doc
+        .fontSize(10)
+        .font("Helvetica-Bold")
+        .text(`${i + 1}. ${safe(q.question)}`)
+        .font("Helvetica");
+      (q.options || []).forEach((opt, j) => {
+        const lettre = ["A", "B", "C", "D"][j];
+        const isBonne = lettre === q.bonne_reponse;
+        doc
+          .fontSize(10)
+          .fillColor(isBonne ? VERT : NOIR)
+          .text(`   ${lettre}. ${safe(opt)}`, { indent: 10 });
+      });
+      doc
+        .fontSize(9)
+        .fillColor("#555555")
+        .text(`Explication : ${safe(q.explication)}`, {
+          indent: 10,
+          lineGap: 2,
+        })
+        .fillColor(NOIR);
+      doc.moveDown(0.6);
+    });
+
+    // ====== Mots-clés ======
+    addSectionTitle("Mots-cles");
+    addPara((data.mots_cles || []).join(" — "));
+
+    // ====== Pied de page ======
+    doc.moveDown(1);
+    doc
+      .fontSize(9)
+      .fillColor("#999999")
+      .text(
+        "ATTENTION : Contenu généré par IA — A valider avec votre enseignant",
+        {
+          align: "center",
+          width: pageWidth,
+        },
+      );
+
+    doc.flushPages();
+    addPageNumber();
+    doc.end();
+  } catch (err) {
+    console.error("❌ /export-bac-pdf error:", err);
+    return res.status(500).json({ error: err.message || "Erreur PDF BAC" });
   }
 });
 
@@ -475,5 +910,3 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Serveur démarré : http://localhost:${PORT}`);
 });
-
-//console.log("Usage:", usageStore);
