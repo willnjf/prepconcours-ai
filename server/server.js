@@ -410,8 +410,6 @@ app.post("/export-ens-pdf", async (req, res) => {
     const data = req.body;
     const { anonymousId } = data;
 
-    console.log("DATA RECU:", JSON.stringify(data).slice(0, 300));
-
     if (!checkLimit(anonymousId, "pdf", 1)) {
       return res
         .status(429)
@@ -534,9 +532,6 @@ app.post("/export-ens-pdf", async (req, res) => {
     addSectionTitle("RESUME ORIENTE ENS");
 
     const resume = data.resume_oriente_ens || data.resume;
-
-    console.log("TYPE RESUME:", typeof resume);
-    console.log("RESUME:", JSON.stringify(resume).slice(0, 200));
 
     if (typeof resume === "object" && resume !== null) {
       addSubTitle("Definition");
@@ -664,8 +659,6 @@ app.post("/export-bac-pdf", async (req, res) => {
   try {
     const data = req.body;
     const { anonymousId } = data;
-
-    console.log("DATA BAC RECU:", JSON.stringify(data).slice(0, 300));
 
     if (!checkLimit(anonymousId, "pdf", 1)) {
       return res
