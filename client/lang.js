@@ -1,6 +1,6 @@
 const translations = {
   fr: {
-    titre: "SVT Prep BAC D 🇨🇲",
+    titre: "SVT Prep BAC D & Concours ENS 🇨🇲",
     soustitre: "Colle un chapitre de SVT, puis clique sur Générer.",
     mode: "Mode",
     langue: "Langue",
@@ -24,7 +24,7 @@ const translations = {
     termine: "✅ Terminé",
   },
   en: {
-    titre: "SVT Prep BAC D 🇨🇲",
+    titre: "SVT Prep BAC D & ENS Contest 🇨🇲",
     soustitre: "Paste a SVT chapter, then click Generate.",
     mode: "Mode",
     langue: "Language",
