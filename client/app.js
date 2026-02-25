@@ -1,11 +1,12 @@
 // ====== Éléments UI ======
 let lastBacData = null;
 let lastEnsData = null;
+
 const inputText = document.getElementById("inputText");
 const btnGenerate = document.getElementById("btnTest");
 
-const modeEl = document.getElementById("mode"); // "bac" ou "ens"
-const langEl = document.getElementById("lang"); // "fr" ou "en"
+const modeEl = document.getElementById("mode");
+const langEl = document.getElementById("lang");
 
 const resumeEl = document.getElementById("resume");
 const pointsEl = document.getElementById("pointsCles");
@@ -33,14 +34,600 @@ const ensExerciceSection = document.getElementById("ensExerciceSection");
 const ensExerciceEl = document.getElementById("ensExercice");
 
 const btnDownloadPdf = document.getElementById("btnDownloadPdf");
-
 const badgeBac = document.getElementById("badgeBac");
 const badgeEns = document.getElementById("badgeEns");
-
 const btnDownloadBacPdf = document.getElementById("btnDownloadBacPdf");
-
 const bacExerciceSection = document.getElementById("bacExerciceSection");
 const bacExerciceEl = document.getElementById("bacExercice");
+
+// ← Ajoute ces deux lignes ici
+const selectChapitre = document.getElementById("selectChapitre");
+const chapitreSelectBox = document.getElementById("chapitreSelectBox");
+
+// ====== Structure du menu ======
+const MENU = {
+  "bac-general": {
+    label: "BAC Général",
+    series: {
+      "bac-d": {
+        label: "Série D",
+        matieres: {
+          "bac-svt": { label: "SVT", actif: true },
+          "bac-maths": { label: "Mathématiques", actif: true },
+          "bac-pc": { label: "Physique - Chimie", actif: true },
+        },
+      },
+      "bac-c": {
+        label: "Série C",
+        matieres: {
+          "bac-c-maths": { label: "Mathématiques", actif: false },
+          "bac-c-pc": { label: "Physique-Chimie", actif: false },
+          "bac-c-svt": { label: "SVT", actif: false },
+        },
+      },
+      "bac-a": {
+        label: "Série A",
+        matieres: {
+          "bac-a-français": { label: "Français", actif: false },
+          "bac-a-philo": { label: "Philosophie", actif: false },
+          "bac-a-histgeo": { label: "Histoire-Géographie", actif: false },
+        },
+      },
+    },
+  },
+  gce: {
+    label: "GCE Anglophone",
+    series: {
+      "gce-science": {
+        label: "A/L Science",
+        matieres: {
+          "gce-maths": { label: "Mathematics", actif: false },
+          "gce-physics": { label: "Physics", actif: false },
+          "gce-chemistry": { label: "Chemistry", actif: false },
+          "gce-biology": { label: "Biology", actif: false },
+        },
+      },
+      "gce-arts": {
+        label: "A/L Arts",
+        matieres: {
+          "gce-literature": { label: "Literature in English", actif: false },
+          "gce-history": { label: "History", actif: false },
+          "gce-government": { label: "Government", actif: false },
+          "gce-gp": { label: "General Paper", actif: false },
+        },
+      },
+      "gce-commercial": {
+        label: "A/L Commercial",
+        matieres: {
+          "gce-economics": { label: "Economics", actif: false },
+          "gce-accounting": { label: "Accounting", actif: false },
+          "gce-commerce": { label: "Commerce", actif: false },
+        },
+      },
+    },
+  },
+  "bac-technique": {
+    label: "BAC Technique",
+    series: {
+      "bac-f1": {
+        label: "F1 - Construction Mécanique",
+        matieres: {
+          "f1-maths": { label: "Mathématiques", actif: false },
+          "f1-sciences": { label: "Sciences Physiques", actif: false },
+          "f1-techno": { label: "Technologie Mécanique", actif: false },
+          "f1-dessin": { label: "Dessin Industriel", actif: false },
+        },
+      },
+      "bac-f2": {
+        label: "F2 - Électronique",
+        matieres: {
+          "f2-maths": { label: "Mathématiques", actif: false },
+          "f2-physique": { label: "Physique Appliquée", actif: false },
+          "f2-electronique": { label: "Électronique", actif: false },
+        },
+      },
+      "bac-f3": {
+        label: "F3 - Électrotechnique",
+        matieres: {
+          "f3-maths": { label: "Mathématiques", actif: false },
+          "f3-physique": { label: "Physique Appliquée", actif: false },
+          "f3-electro": { label: "Électrotechnique", actif: false },
+        },
+      },
+      "bac-f4": {
+        label: "F4 - Génie Civil",
+        matieres: {
+          "f4-maths": { label: "Mathématiques", actif: false },
+          "f4-physique": { label: "Physique", actif: false },
+          "f4-techno": { label: "Technologie du Bâtiment", actif: false },
+          "f4-dessin": { label: "Dessin Technique", actif: false },
+        },
+      },
+      "bac-f5": {
+        label: "F5 - Froid & Climatisation",
+        matieres: {
+          "f5-maths": { label: "Mathématiques", actif: false },
+          "f5-sciences": { label: "Sciences Physiques", actif: false },
+          "f5-techno": { label: "Techno Froid/Climatisation", actif: false },
+        },
+      },
+      "bac-g1": {
+        label: "G1 - Techniques Administratives",
+        matieres: {
+          "g1-economie": { label: "Économie", actif: false },
+          "g1-droit": { label: "Droit", actif: false },
+          "g1-compta": { label: "Comptabilité", actif: false },
+        },
+      },
+      "bac-g2": {
+        label: "G2 - Comptabilité/Gestion",
+        matieres: {
+          "g2-compta": { label: "Comptabilité", actif: false },
+          "g2-economie": { label: "Économie", actif: false },
+          "g2-maths": { label: "Mathématiques", actif: false },
+        },
+      },
+      "bac-g3": {
+        label: "G3 - Commerce",
+        matieres: {
+          "g3-commerce": { label: "Techniques Commerciales", actif: false },
+          "g3-economie": { label: "Économie", actif: false },
+          "g3-compta": { label: "Comptabilité", actif: false },
+        },
+      },
+    },
+  },
+  concours: {
+    label: "Concours Nationaux",
+    series: {
+      ens: {
+        label: "ENS Yaoundé",
+        matieres: {
+          "ens-svt": { label: "Biologie/SVT", actif: true },
+          "ens-maths": { label: "Mathématiques", actif: false },
+          "ens-physique": { label: "Physique", actif: false },
+        },
+      },
+      enset: {
+        label: "ENSET",
+        matieres: {
+          "enset-maths": { label: "Mathématiques", actif: false },
+          "enset-physique": { label: "Physique", actif: false },
+          "enset-info": { label: "Informatique", actif: false },
+        },
+      },
+      polytech: {
+        label: "Polytechnique",
+        matieres: {
+          "poly-maths": { label: "Mathématiques", actif: false },
+          "poly-pc": { label: "Physique-Chimie", actif: false },
+        },
+      },
+      enam: {
+        label: "ENAM",
+        matieres: {
+          "enam-culture": { label: "Culture Générale", actif: false },
+          "enam-droit": { label: "Droit", actif: false },
+          "enam-economie": { label: "Économie", actif: false },
+        },
+      },
+      esstic: {
+        label: "ESSTIC",
+        matieres: {
+          "esstic-culture": { label: "Culture Générale", actif: false },
+          "esstic-français": { label: "Français", actif: false },
+          "esstic-com": { label: "Communication", actif: false },
+        },
+      },
+      fmsb: {
+        label: "FMSB (Médecine)",
+        matieres: {
+          "fmsb-svt": { label: "SVT", actif: false },
+          "fmsb-pc": { label: "Physique-Chimie", actif: false },
+          "fmsb-maths": { label: "Mathématiques", actif: false },
+        },
+      },
+      iai: {
+        label: "IAI Cameroun",
+        matieres: {
+          "iai-info": { label: "Informatique", actif: false },
+          "iai-maths": { label: "Mathématiques", actif: false },
+        },
+      },
+    },
+  },
+};
+
+// ====== Chapitres prédéfinis ======
+const CHAPITRES = {
+  "bac-svt": [
+    "🧬 1 BIOLOGIE CELLULAIRE",
+    "◆ Structure et fonctionnement de la cellule",
+    "La cellule et ses organites",
+    "La mitose",
+    "La méiose",
+    "◆ Métabolisme cellulaire",
+    "La photosynthèse",
+    "La respiration cellulaire",
+
+    "🧪 2 GÉNÉTIQUE & HÉRÉDITÉ",
+    "◆ Génétique mendélienne",
+    "La génétique mendélienne",
+    "La transmission de l'information génétique",
+    "◆ Génétique moléculaire",
+    "L'ADN et la réplication",
+    "La synthèse des protéines",
+
+    "🧠 3 BIOLOGIE HUMAINE / PHYSIOLOGIE",
+    "◆ Fonction de nutrition",
+    "La digestion",
+    "La circulation sanguine",
+    "◆ Coordination et régulation",
+    "Le système nerveux",
+    "L'immunologie",
+    "◆ Fonction de reproduction",
+    "La reproduction",
+
+    "🌿 4 BIOLOGIE VÉGÉTALE",
+    "◆ Nutrition des plantes",
+    "La nutrition minérale des plantes",
+    "La photosynthèse chez les végétaux",
+    "◆ Reproduction végétale",
+    "La reproduction chez les végétaux",
+
+    "🌍 5 GÉOLOGIE",
+    "◆ Géologie interne",
+    "La tectonique des plaques",
+    "Les roches et minéraux",
+    "◆ Géologie externe",
+    "L'érosion et les sédiments",
+    "◆ Evolution",
+    "L'évolution des espèces",
+    "L'écologie et les écosystèmes",
+  ],
+
+  "bac-maths": [
+    "📐1️⃣ ANALYSE",
+    "◆ Fonctions",
+    "Les fonctions dérivées",
+    "Les fonctions usuelles",
+    "Les limites de fonctions",
+    "La continuité des fonctions",
+    "◆ Intégration",
+    "Les intégrales",
+    "Les équations différentielles",
+    "◆ Suites",
+    "Les suites numériques",
+    "Les suites arithmétiques et géométriques",
+
+    "📊 2 PROBABILITÉS & STATISTIQUES",
+    "◆ Probabilités",
+    "Les probabilités",
+    "Les variables aléatoires",
+    "La loi binomiale",
+    "La loi normale",
+    "◆ Statistiques",
+    "Les statistiques descriptives",
+    "Les statistiques inférentielles",
+
+    "📏 3 GÉOMÉTRIE",
+    "◆ Géométrie plane",
+    "La géométrie plane",
+    "Les transformations géométriques",
+    "◆ Géométrie dans l'espace",
+    "La géométrie dans l'espace",
+    "Les vecteurs dans l'espace",
+
+    "🔢 4 ALGÈBRE",
+    "◆ Nombres",
+    "Les nombres complexes",
+    "Les matrices",
+    "◆ Trigonométrie",
+    "La trigonométrie",
+    "Les équations trigonométriques",
+    "◆ Arithmétique",
+    "L'arithmétique et la divisibilité",
+    "Les systèmes d'équations",
+  ],
+
+  "bac-pc": [
+    "⚡ 1 PHYSIQUE MÉCANIQUE",
+    "◆ Cinématique",
+    "Le mouvement et la cinématique",
+    "La chute libre",
+    "◆ Dynamique",
+    "La mécanique : les forces",
+    "Les lois de Newton",
+    "La gravitation universelle",
+    "◆ Énergie",
+    "L'énergie et ses formes",
+    "Le travail et la puissance",
+    "La conservation de l'énergie",
+
+    "🔌 2 PHYSIQUE ÉLECTRICITÉ",
+    "◆ Électrostatique",
+    "L'électricité : courant et tension",
+    "La loi d'Ohm",
+    "◆ Circuits électriques",
+    "Les circuits électriques",
+    "La résistance et loi d'Ohm",
+    "Les condensateurs",
+    "◆ Électromagnétisme",
+    "Le magnétisme",
+    "L'induction électromagnétique",
+
+    "🌊 3 PHYSIQUE ONDES & OPTIQUE",
+    "◆ Optique",
+    "L'optique géométrique",
+    "Les lentilles et miroirs",
+    "◆ Ondes",
+    "Les ondes mécaniques",
+    "Les ondes sonores",
+    "La lumière et les ondes électromagnétiques",
+
+    "⚗️ 4 CHIMIE GÉNÉRALE",
+    "◆ Structure de la matière",
+    "La structure de la matière",
+    "La classification périodique",
+    "Les liaisons chimiques",
+    "◆ Réactions chimiques",
+    "Les réactions chimiques",
+    "La stœchiométrie",
+    "La thermochimie",
+    "◆ Radioactivité",
+    "La radioactivité",
+    "La fission et la fusion nucléaire",
+
+    "🧪 5 CHIMIE EN SOLUTION",
+    "◆ Acides et bases",
+    "Les acides et les bases",
+    "Le pH et les indicateurs",
+    "◆ Oxydoréduction",
+    "L'oxydoréduction",
+    "Les piles électrochimiques",
+    "◆ Solutions",
+    "Les solutions aqueuses",
+    "La solubilité",
+
+    "🔬 6 CHIMIE ORGANIQUE",
+    "◆ Hydrocarbures",
+    "La chimie organique",
+    "Les alcanes et alcènes",
+    "◆ Fonctions organiques",
+    "Les alcools et phénols",
+    "Les acides carboxyliques",
+    "Les esters et savons",
+  ],
+
+  "ens-svt": [
+    "🧬 1 BIOLOGIE CELLULAIRE AVANCÉE",
+    "◆ Division cellulaire",
+    "La méiose et la diversité génétique",
+    "La mitose et le cycle cellulaire",
+    "◆ Métabolisme avancé",
+    "La photosynthèse et la respiration",
+    "La régulation du métabolisme",
+
+    "🧪 2 GÉNÉTIQUE AVANCÉE",
+    "◆ Génétique classique",
+    "La génétique mendélienne avancée",
+    "Les liaisons génétiques",
+    "◆ Génétique moléculaire",
+    "L'expression des gènes",
+    "Les mutations et leurs conséquences",
+    "La régulation de l'expression génique",
+
+    "🧠 3 PHYSIOLOGIE AVANCÉE",
+    "◆ Neurophysiologie",
+    "La neurophysiologie",
+    "La transmission synaptique",
+    "◆ Immunologie avancée",
+    "L'immunologie et les défenses",
+    "Les réponses immunitaires spécifiques",
+    "◆ Endocrinologie",
+    "La régulation hormonale",
+
+    "🌍 4 ÉCOLOGIE & ÉVOLUTION",
+    "◆ Écologie",
+    "L'écologie des populations",
+    "Les cycles biogéochimiques",
+    "◆ Evolution",
+    "L'évolution et la sélection naturelle",
+    "La phylogénèse et la classification",
+
+    "🌿 5 BIOLOGIE VÉGÉTALE AVANCÉE",
+    "◆ Physiologie végétale",
+    "La nutrition minérale avancée",
+    "La régulation de la croissance",
+    "◆ Reproduction végétale avancée",
+    "La reproduction sexuée chez les plantes",
+
+    "🌊 6 GÉOLOGIE AVANCÉE",
+    "◆ Géodynamique",
+    "La tectonique des plaques",
+    "La formation des chaînes de montagnes",
+    "◆ Pétrologie",
+    "Les roches magmatiques et métamorphiques",
+    "Le cycle des roches",
+  ],
+};
+
+// ====== Logique du menu ======
+let currentCat = "bac-general";
+let currentSerie = "bac-d";
+let currentMatiere = "bac-svt";
+
+const selectSerie = document.getElementById("selectSerie");
+const selectMatiere = document.getElementById("selectMatiere");
+const catBtns = document.querySelectorAll(".cat-btn");
+
+function updateSeries(cat) {
+  selectSerie.innerHTML = '<option value="">-- Choisir --</option>';
+  const series = MENU[cat]?.series || {};
+  Object.entries(series).forEach(([key, val]) => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = val.label;
+    selectSerie.appendChild(opt);
+  });
+  // Sélectionne la première série par défaut
+  const firstSerie = Object.keys(series)[0];
+  if (firstSerie) {
+    selectSerie.value = firstSerie;
+    currentSerie = firstSerie;
+    updateMatieres(cat, firstSerie);
+  }
+}
+
+function updateMatieres(cat, serie) {
+  selectMatiere.innerHTML = '<option value="">-- Choisir --</option>';
+  const matieres = MENU[cat]?.series[serie]?.matieres || {};
+  Object.entries(matieres).forEach(([key, val]) => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = val.actif ? val.label : `${val.label} 🔜`;
+    opt.disabled = !val.actif;
+    selectMatiere.appendChild(opt);
+  });
+  // Sélectionne la première matière active par défaut
+  const firstActif = Object.entries(matieres).find(([, v]) => v.actif);
+  if (firstActif) {
+    selectMatiere.value = firstActif[0];
+    currentMatiere = firstActif[0];
+  }
+  // appelle de updatechapitres
+  updateChapitres(firstActif ? firstActif[0] : "");
+}
+
+// ====== Mise à jour des chapitres ======
+
+/*function updateChapitres(matiere) {
+  selectChapitre.innerHTML =
+    '<option value="">-- Sélectionne un chapitre --</option>';
+
+  // Vide le textarea quand on change de matière
+  inputText.value = "";
+  selectChapitre.value = "";
+
+  const chapitres = CHAPITRES[matiere] || [];
+
+  if (chapitres.length === 0) {
+    chapitreSelectBox.style.display = "none";
+    return;
+  }
+
+  chapitreSelectBox.style.display = "flex";
+
+  chapitres.forEach((ch) => {
+    const opt = document.createElement("option");
+
+    if (ch.startsWith(" ===")) {
+      // C'est un séparateur
+      opt.value = "";
+      opt.textContent = ch;
+      opt.disabled = true;
+      opt.style.fontWeight = "bold";
+      opt.style.color = "#6366f1";
+    } else {
+      opt.value = ch;
+      opt.textContent = ch;
+    }
+
+    selectChapitre.appendChild(opt);
+  });
+}*/
+
+function updateChapitres(matiere) {
+  selectChapitre.innerHTML =
+    '<option value="">-- Sélectionne un chapitre --</option>';
+
+  const chapitres = CHAPITRES[matiere] || [];
+
+  if (chapitres.length === 0) {
+    chapitreSelectBox.style.display = "none";
+    return;
+  }
+
+  chapitreSelectBox.style.display = "flex";
+
+  chapitres.forEach((ch) => {
+    const opt = document.createElement("option");
+
+    if (
+      ch.match(
+        /^\d|^🧬|^🧪|^🫀|^🌿|^🌍|^📐|^📊|^📏|^🔢|^⚡|^🔌|^🌊|^⚗️|^🔬|^🧠/,
+      )
+    ) {
+      // Titre principal avec fond
+      opt.value = ch;
+      opt.textContent = ch;
+      opt.style.fontWeight = "bold";
+      opt.style.background = "#1a3a6b";
+      opt.style.color = "white";
+    } else if (ch.startsWith("◆")) {
+      // Sous-titre
+      opt.value = ch;
+      opt.textContent = "🔹" + ch.slice(1);
+      opt.style.fontWeight = "600";
+      opt.style.color = "#6366f1";
+    } else {
+      // Chapitre normal
+      opt.value = ch;
+      opt.textContent = "    " + ch;
+    }
+
+    selectChapitre.appendChild(opt);
+  });
+}
+// Quand l'étudiant choisit un chapitre
+selectChapitre.addEventListener("change", () => {
+  if (selectChapitre.value) {
+    inputText.value = selectChapitre.value;
+  }
+});
+
+// Quand l'étudiant tape dans la zone texte
+inputText.addEventListener("input", () => {
+  // Quand l'étudiant tape dans la zone texte
+  if (inputText) {
+    inputText.addEventListener("input", () => {
+      if (inputText.value.trim() !== selectChapitre.value) {
+        selectChapitre.value = "";
+      }
+    });
+  }
+});
+
+// Clics sur les catégories
+catBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    catBtns.forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentCat = btn.dataset.cat;
+    // Initialisation
+    updateSeries(currentCat);
+    updateChapitres(currentMatiere);
+  });
+});
+
+// Changement de série
+selectSerie.addEventListener("change", () => {
+  currentSerie = selectSerie.value;
+  updateMatieres(currentCat, currentSerie);
+});
+
+// Changement de matière
+selectMatiere.addEventListener("change", () => {
+  currentMatiere = selectMatiere.value;
+});
+//tests
+selectMatiere.addEventListener("change", () => {
+  currentMatiere = selectMatiere.value;
+  updateChapitres(currentMatiere);
+});
+
+// Initialisation
+updateSeries(currentCat);
 
 // ====== id ========
 function getOrCreateAnonymousId() {
@@ -97,17 +684,20 @@ function clearUI() {
 
 // ====== Rendu BAC / ENS ======
 function render(data) {
-  if (currentMode === "ens") {
+  if (currentMatiere === "ens-svt") {
     lastEnsData = data;
   }
 
-  if (currentMode === "bac") {
+  if (
+    currentMatiere === "bac-svt" ||
+    currentMatiere === "bac-maths" ||
+    currentMatiere === "bac-pc"
+  ) {
     lastBacData = data;
   }
   // ====== Résumé / Points / Flashcards / Mots-clés (BAC) ======
   // Pour ENS, ces champs n’existent pas forcément, donc on garde un fallback.
   const resumeText = data.resume || data.resume_oriente_ens || "";
-  //resumeEl.textContent = resumeText;
 
   if (typeof data.resume === "object") {
     resumeEl.innerHTML = `
@@ -215,7 +805,7 @@ function render(data) {
   });
 
   // ====== ENS: Plan 7 jours ======
-  if (currentMode === "ens" && Array.isArray(data.plan_revision_7j)) {
+  if (currentMatiere === "ens-svt" && Array.isArray(data.plan_revision_7j)) {
     ensPlanSection.style.display = "block";
     ensPlanEl.innerHTML = "";
 
@@ -236,7 +826,7 @@ function render(data) {
   }
 
   // ====== ENS: Pièges fréquents ======
-  if (currentMode === "ens" && Array.isArray(data.pieges_frequents)) {
+  if (currentMatiere === "ens-svt" && Array.isArray(data.pieges_frequents)) {
     ensPiegesSection.style.display = "block";
     ensPiegesEl.innerHTML = "";
 
@@ -248,7 +838,7 @@ function render(data) {
   }
 
   // ====== ENS: Questions longues ======
-  if (currentMode === "ens" && Array.isArray(data.questions_type_ens)) {
+  if (currentMatiere === "ens-svt" && Array.isArray(data.questions_type_ens)) {
     ensLongSection.style.display = "block";
     ensLongEl.innerHTML = "";
 
@@ -274,7 +864,7 @@ function render(data) {
   }
 
   // ====== ENS: Mini-barème ======
-  if (currentMode === "ens" && Array.isArray(data.mini_bareme)) {
+  if (currentMatiere === "ens-svt" && Array.isArray(data.mini_bareme)) {
     ensBaremeSection.style.display = "block";
     ensBaremeEl.innerHTML = "";
 
@@ -286,7 +876,7 @@ function render(data) {
   }
 
   // ====== ENS: Exercice corrigé ======
-  if (currentMode === "ens" && data.exercice_type) {
+  if (currentMatiere === "ens-svt" && data.exercice_type) {
     ensExerciceSection.style.display = "block";
     ensExerciceEl.innerHTML = "";
 
@@ -311,8 +901,12 @@ function render(data) {
   `;
   }
 
-  // ====== BAC: Exercice type examen ======
-  if (currentMode === "bac" && data.exercice_type_bac) {
+  if (
+    (currentMatiere === "bac-svt" ||
+      currentMatiere === "bac-maths" ||
+      currentMatiere === "bac-pc") &&
+    data.exercice_type_bac
+  ) {
     bacExerciceSection.style.display = "block";
     bacExerciceEl.innerHTML = "";
 
@@ -361,11 +955,11 @@ function render(data) {
   `;
 
     bacExerciceEl.innerHTML = html;
-  } else if (currentMode === "bac") {
+  } else if (currentMatiere === "bac-svt" || currentMatiere === "bac-maths") {
     bacExerciceSection.style.display = "none";
   }
 
-  if (currentMode === "ens") {
+  if (currentMatiere === "ens-svt") {
     btnDownloadPdf.style.display = "inline-block";
     btnDownloadBacPdf.style.display = "none";
   } else {
@@ -381,23 +975,40 @@ btnGenerate.addEventListener("click", async () => {
 
   const text = inputText.value;
 
-  const mode = modeEl.value; // "bac" ou "ens"
+  const mode = currentMatiere; // "bac" ou "ens"
   const language = langEl.value; // "fr" ou "en"
 
-  currentMode = mode;
+  currentMode = currentMatiere;
 
-  if (currentMode === "bac") {
-    badgeBac.classList.add("active");
-    badgeEns.classList.remove("active");
-  } else {
+  if (currentMode === "ens") {
     badgeEns.classList.add("active");
     badgeBac.classList.remove("active");
+  } else {
+    badgeBac.classList.add("active");
+    badgeEns.classList.remove("active");
   }
 
-  const url =
-    mode === "ens"
-      ? "https://prepconcours-ai-backend.onrender.com/generate-ens"
-      : "https://prepconcours-ai-backend.onrender.com/generate";
+  const ROUTES = {
+    "bac-svt": "/generate",
+    "bac-maths": "/generate-maths",
+    "bac-pc": "/generate-pc",
+    "ens-svt": "/generate-ens",
+  };
+
+  // === garde pour test en local ====
+  //const BASE = "http://localhost:3000";
+
+  // ==== Production ========
+  const BASE = "https://prepconcours-ai-backend.onrender.com";
+
+  const route = ROUTES[mode] || null;
+
+  if (!route) {
+    statusEl.textContent = "⏳ Cette matière arrive bientôt !";
+    return;
+  }
+
+  const url = `${BASE}${route}`;
 
   try {
     const res = await fetch(url, {
@@ -466,7 +1077,8 @@ btnDownloadPdf.addEventListener("click", async () => {
     }
 
     const res = await fetch(
-      "https://prepconcours-ai-backend.onrender.com/export-ens-pdf",
+      //"https://prepconcours-ai-backend.onrender.com/export-ens-pdf",
+      "http://localhost:3000/export-ens-pdf",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -511,7 +1123,8 @@ btnDownloadBacPdf.addEventListener("click", async () => {
     }
 
     const res = await fetch(
-      "https://prepconcours-ai-backend.onrender.com/export-bac-pdf",
+      //"https://prepconcours-ai-backend.onrender.com/export-bac-pdf",
+      "http://localhost:3000/export-bac-pdf",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -1,7 +1,8 @@
 const translations = {
   fr: {
-    titre: "SVT Prep BAC D & Concours ENS 🇨🇲",
-    soustitre: "Colle un chapitre de SVT, puis clique sur Générer.",
+    titre: "Prepa Baccalauréat & Concours Nationaux 🇨🇲",
+    aide: "💡 Comment utiliser PrepConcours AI ? 1️⃣ Choisis ta catégorie, série et matière. 2️⃣ Sélectionne un chapitre dans la liste ou colle ton cours. 3️⃣ Clique sur Générer et reçois ta fiche en 30 secondes ! 🚀",
+
     mode: "Mode",
     langue: "Langue",
     placeholder: "Colle ton chapitre ici...",
@@ -24,8 +25,8 @@ const translations = {
     termine: "✅ Terminé",
   },
   en: {
-    titre: "SVT Prep BAC D & ENS Contest 🇨🇲",
-    soustitre: "Paste a SVT chapter, then click Generate.",
+    titre: "Prepa GCE Advenced Level  & National Contest 🇨🇲",
+    aide: "💡 Comment utiliser PrepConcours AI ? 1️⃣ Choisis ta catégorie, série et matière. 2️⃣ Sélectionne un chapitre dans la liste ou colle ton cours. 3️⃣ Clique sur Générer et reçois ta fiche en 30 secondes ! 🚀",
     mode: "Mode",
     langue: "Language",
     placeholder: "Paste your chapter here...",
@@ -56,7 +57,7 @@ function applyLanguage(lang) {
   if (h1) h1.textContent = t.titre;
 
   const soustitre = document.querySelector("main.container > p");
-  if (soustitre) soustitre.textContent = t.soustitre;
+  if (aide) aide.textContent = t.aide;
 
   const disclaimer = document.querySelector(".disclaimer");
   if (disclaimer) disclaimer.textContent = t.disclaimer;
@@ -92,7 +93,32 @@ function applyLanguage(lang) {
   const exerciceH2 = document.querySelector("#ensExerciceSection h2");
   if (exerciceH2) exerciceH2.textContent = t.exercice;
 
-  console.log("✅ Langue appliquée :", lang);
+  // Chapitre select
+  const chapitreLabel = document.querySelector(".chapitre-label");
+  if (chapitreLabel)
+    chapitreLabel.textContent =
+      lang === "en" ? "Choose a chapter" : "Choisis un chapitre";
+
+  // Textarea placeholder
+  if (inputText)
+    inputText.placeholder =
+      lang === "en"
+        ? "Paste your course here... (min 3 characters)"
+        : "Colle ici ton chapitre de cours... (min 3 caractères)";
+
+  // Séparateur OU
+  const ouSep = document.querySelector(".ou-separateur span");
+  if (ouSep) ouSep.textContent = lang === "en" ? "OR" : "OU";
+
+  // Label texte libre
+  const texteLibreLabel = document.querySelector(
+    ".texte-libre .chapitre-label",
+  );
+  if (texteLibreLabel)
+    texteLibreLabel.textContent =
+      lang === "en"
+        ? "Or paste your course below"
+        : "Colle ton cours ci-dessous";
 }
 
 // Applique au chargement de la page

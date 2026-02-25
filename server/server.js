@@ -123,28 +123,30 @@ function extractJsonOrThrow(raw) {
   throw new Error("La réponse IA n'est pas un JSON valide.");
 }
 
-// ========= Routes =========
+// =================================== ROUTES ====================================
 
-// Test route
+// ================ Test route =================
 app.get("/", (req, res) => {
   res.send("OK ✅ Serveur SVT Prep en ligne");
 });
 
-// ========= Route IA (BAC D) =====================
+// ========= Route IA (BAC D) svt =====================
 app.post("/generate", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 3)) {
-      return res.status(429).json({ error: "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée." });
+    if (!checkLimit(anonymousId, "generate", 5)) {
+      return res.status(429).json({
+        error:
+          "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+      });
     }
 
     if (!requireApiKey(res)) return;
-
-    if (!text || String(text).trim().length < 50) {
+    if (!text || String(text).trim().length < 3) {
       return res
         .status(400)
-        .json({ error: "Colle au moins 50 caractères de cours SVT." });
+        .json({ error: "Saisis au moins un thème ou un chapitre." });
     }
     // ======= langue ==========
     const langInstruction =
@@ -238,7 +240,6 @@ Texte:
     const cache = readCache();
 
     if (cache[cacheKey]) {
-      console.log("✅ Réponse depuis le cache !");
       return res.json(cache[cacheKey]);
     }
 
@@ -265,23 +266,25 @@ Texte:
 
     return res.json(json);
   } catch (err) {
-    console.error("❌ /generate error:", err);
     return res.status(500).json({ error: err.message || "Erreur serveur" });
   }
 });
 
-// Route IA ENS
+// ==== Route IA ENS svt concours ====
 app.post("/generate-ens", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 3)) {
-      return res.status(429).json({ error: "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée." });
+    if (!checkLimit(anonymousId, "generate", 5)) {
+      return res.status(429).json({
+        error:
+          "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+      });
     }
 
     if (!requireApiKey(res)) return;
 
-    if (!text || String(text).trim().length < 80) {
+    if (!text || String(text).trim().length < 3) {
       return res.status(400).json({
         error: "Colle au moins 80 caractères (niveau ENS, plus de contexte).",
       });
@@ -373,7 +376,6 @@ Texte à analyser:
     const cache = readCache();
 
     if (cache[cacheKey]) {
-      console.log("✅ Réponse ENS depuis le cache !");
       return res.json(cache[cacheKey]);
     }
 
@@ -411,9 +413,10 @@ app.post("/export-ens-pdf", async (req, res) => {
     const { anonymousId } = data;
 
     if (!checkLimit(anonymousId, "pdf", 1)) {
-      return res
-        .status(429)
-        .json({ error: "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée." });
+      return res.status(429).json({
+        error:
+          "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+      });
     }
 
     if (!data || !data.resume) {
@@ -661,9 +664,10 @@ app.post("/export-bac-pdf", async (req, res) => {
     const { anonymousId } = data;
 
     if (!checkLimit(anonymousId, "pdf", 1)) {
-      return res
-        .status(429)
-        .json({ error: "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée." });
+      return res.status(429).json({
+        error:
+          "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+      });
     }
 
     if (!data || !data.resume) {
@@ -894,12 +898,282 @@ app.post("/export-bac-pdf", async (req, res) => {
   }
 });
 
+// ========= Route IA (BAC D - Maths) =========
+app.post("/generate-maths", async (req, res) => {
+  try {
+    const { text, language, anonymousId } = req.body;
+
+    if (!checkLimit(anonymousId, "generate", 5)) {
+      return res.status(429).json({
+        error:
+          "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+      });
+    }
+
+    if (!requireApiKey(res)) return;
+
+    if (!text || String(text).trim().length < 3) {
+      return res
+        .status(400)
+        .json({ error: "Saisis au moins un thème ou un chapitre." });
+    }
+
+    const langInstruction =
+      language === "en"
+        ? "Answer in clear simple English used in Cameroon schools."
+        : "Réponds en français simple (style Cameroun).";
+
+    const sujetsRef = loadSujets("bac", "maths");
+    const sujetsContext =
+      sujetsRef.length > 0
+        ? `Voici des exemples de vrais sujets BAC Maths Cameroun pour t'inspirer :
+${JSON.stringify(sujetsRef.slice(0, 2), null, 2)}`
+        : "";
+
+    const cacheKey = getCacheKey(text, "bac-maths", language);
+    const cache = readCache();
+
+    if (cache[cacheKey]) {
+      return res.json(cache[cacheKey]);
+    }
+
+    const prompt = `
+Tu es un professeur expérimenté de Mathématiques au Cameroun, spécialiste du BAC D.
+Tu connais parfaitement le programme officiel camerounais de Maths BAC D.
+Si tu n'es pas certain d'une information, indique-le explicitement.
+${langInstruction}
+
+À partir du texte ci-dessous, réponds STRICTEMENT en JSON valide avec ce format EXACT :
+
+{
+  "resume": {
+    "definition": "2-3 lignes de définition du thème mathématique",
+    "mecanismes": ["propriété 1", "propriété 2", "propriété 3"],
+    "schemas_importants": [
+      {
+        "titre": "Nom du schéma ou graphique",
+        "instructions": "Ce que l'élève doit dessiner ou construire exactement",
+        "elements_obligatoires": ["élément 1", "élément 2", "élément 3"]
+      }
+    ],
+    "mots_cles_scientifiques": ["mot 1", "mot 2", "mot 3"],
+    "conclusion": "2-3 lignes de synthèse"
+  },
+  "points_cles": ["point 1", "point 2", "point 3"],
+  "flashcards": [
+    {"q": "question 1", "a": "réponse 1"},
+    {"q": "question 2", "a": "réponse 2"}
+  ],
+  "qcm": [
+    {
+      "question": "question 1",
+      "options": ["option A", "option B", "option C", "option D"],
+      "bonne_reponse": "A",
+      "explication": "explication 1"
+    }
+  ],
+  "mots_cles": ["mot 1", "mot 2", "mot 3"],
+  "exercice_type_bac": {
+    "consigne": "consigne de l'exercice",
+    "enonce": "énoncé mathématique détaillé",
+    "questions": [
+      {"numero": 1, "question": "question simple", "bareme": 2},
+      {"numero": 2, "question": "question intermédiaire", "bareme": 3},
+      {"numero": 3, "question": "question complexe", "bareme": 3}
+    ],
+    "corrige": {
+      "reponses": [
+        {"numero": 1, "reponse": "solution détaillée étape par étape 1"},
+        {"numero": 2, "reponse": "solution détaillée étape par étape 2"},
+        {"numero": 3, "reponse": "solution détaillée étape par étape 3"}
+      ],
+      "bareme_total": 8
+    }
+  }
+}
+
+Règles:
+- Écris en ${language === "en" ? "simple English adapted for Cameroonian students" : "français simple adapté aux élèves camerounais"}.
+- QCM: exactement 5 questions, 4 options chacune.
+- Flashcards: exactement 5.
+- exercice_type_bac: 1 exercice mathématique avec 3 questions progressives.
+- Les solutions doivent être détaillées étape par étape.
+- Utilise la notation mathématique standard.
+- Ne mets aucun texte en dehors du JSON.
+
+${sujetsContext}
+
+Texte:
+"""${String(text).trim()}"""
+`.trim();
+
+    const response = await client.responses.create({
+      model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
+      input: prompt,
+    });
+
+    const raw = response.output_text ?? "";
+    let json;
+
+    try {
+      json = extractJsonOrThrow(raw);
+      cache[cacheKey] = json;
+      writeCache(cache);
+    } catch (e) {
+      return res.status(500).json({
+        error: e.message || "La réponse IA Maths n'est pas un JSON valide.",
+        raw,
+      });
+    }
+
+    return res.json(json);
+  } catch (err) {
+    console.error("❌ /generate-maths error:", err);
+    return res.status(500).json({ error: err.message || "Erreur serveur" });
+  }
+});
+
+// ========= Route IA (BAC D - Physique-Chimie) =========
+app.post("/generate-pc", async (req, res) => {
+  try {
+    const { text, language, anonymousId } = req.body;
+
+    if (!checkLimit(anonymousId, "generate", 5)) {
+      return res.status(429).json({
+        error:
+          "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+      });
+    }
+
+    if (!requireApiKey(res)) return;
+
+    if (!text || String(text).trim().length < 3) {
+      return res
+        .status(400)
+        .json({ error: "Saisis au moins un thème ou un chapitre." });
+    }
+
+    const langInstruction =
+      language === "en"
+        ? "Answer in clear simple English used in Cameroon schools."
+        : "Réponds en français simple (style Cameroun).";
+
+    const sujetsRef = loadSujets("bac", "physique-chimie");
+    const sujetsContext =
+      sujetsRef.length > 0
+        ? `Voici des exemples de vrais sujets BAC Physique-Chimie Cameroun :
+${JSON.stringify(sujetsRef.slice(0, 2), null, 2)}`
+        : "";
+
+    const cacheKey = getCacheKey(text, "bac-pc", language);
+    const cache = readCache();
+
+    if (cache[cacheKey]) {
+      return res.json(cache[cacheKey]);
+    }
+
+    const prompt = `
+Tu es un professeur expérimenté de Physique-Chimie au Cameroun, spécialiste du BAC D.
+Tu connais parfaitement le programme officiel camerounais de Physique-Chimie BAC D.
+Si tu n'es pas certain d'une information, indique-le explicitement.
+${langInstruction}
+
+À partir du texte ci-dessous, réponds STRICTEMENT en JSON valide avec ce format EXACT :
+
+{
+  "resume": {
+    "definition": "2-3 lignes de définition du thème",
+    "mecanismes": ["propriété 1", "propriété 2", "propriété 3"],
+    "schemas_importants": [
+      {
+        "titre": "Nom du schéma",
+        "instructions": "Ce que l'élève doit dessiner exactement",
+        "elements_obligatoires": ["élément 1", "élément 2", "élément 3"]
+      }
+    ],
+    "mots_cles_scientifiques": ["mot 1", "mot 2", "mot 3"],
+    "conclusion": "2-3 lignes de synthèse"
+  },
+  "points_cles": ["point 1", "point 2", "point 3"],
+  "flashcards": [
+    {"q": "question 1", "a": "réponse 1"},
+    {"q": "question 2", "a": "réponse 2"}
+  ],
+  "qcm": [
+    {
+      "question": "question 1",
+      "options": ["option A", "option B", "option C", "option D"],
+      "bonne_reponse": "A",
+      "explication": "explication 1"
+    }
+  ],
+  "mots_cles": ["mot 1", "mot 2", "mot 3"],
+  "exercice_type_bac": {
+    "consigne": "consigne de l'exercice",
+    "enonce": "énoncé détaillé avec données numériques si nécessaire",
+    "questions": [
+      {"numero": 1, "question": "question simple", "bareme": 2},
+      {"numero": 2, "question": "question intermédiaire", "bareme": 3},
+      {"numero": 3, "question": "question complexe avec calcul", "bareme": 3}
+    ],
+    "corrige": {
+      "reponses": [
+        {"numero": 1, "reponse": "solution détaillée étape par étape 1"},
+        {"numero": 2, "reponse": "solution détaillée étape par étape 2"},
+        {"numero": 3, "reponse": "solution détaillée avec calcul 3"}
+      ],
+      "bareme_total": 8
+    }
+  }
+}
+
+Règles:
+- Écris en ${language === "en" ? "simple English adapted for Cameroonian students" : "français simple adapté aux élèves camerounais"}.
+- QCM: exactement 5 questions, 4 options chacune.
+- Flashcards: exactement 5.
+- exercice_type_bac: 1 exercice avec 3 questions progressives incluant des calculs numériques.
+- Les solutions doivent être détaillées étape par étape avec les formules utilisées.
+- Utilise la notation scientifique standard.
+- Ne mets aucun texte en dehors du JSON.
+
+${sujetsContext}
+
+Texte:
+"""${String(text).trim()}"""
+`.trim();
+
+    const response = await client.responses.create({
+      model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
+      input: prompt,
+    });
+
+    const raw = response.output_text ?? "";
+    let json;
+
+    try {
+      json = extractJsonOrThrow(raw);
+      cache[cacheKey] = json;
+      writeCache(cache);
+    } catch (e) {
+      return res.status(500).json({
+        error: e.message || "La réponse IA PC n'est pas un JSON valide.",
+        raw,
+      });
+    }
+
+    return res.json(json);
+  } catch (err) {
+    console.error("❌ /generate-pc error:", err);
+    return res.status(500).json({ error: err.message || "Erreur serveur" });
+  }
+});
+
 // 404 fallback (pratique)
 app.use((req, res) => {
   res.status(404).json({ error: "Route introuvable" });
 });
 
-// Start server
+//Start server
 app.listen(PORT, () => {
   console.log(`✅ Serveur démarré : http://localhost:${PORT}`);
 });
