@@ -523,43 +523,6 @@ function updateMatieres(cat, serie) {
   updateChapitres(firstActif ? firstActif[0] : "");
 }
 
-// ====== Mise à jour des chapitres ======
-
-/*function updateChapitres(matiere) {
-  selectChapitre.innerHTML =
-    '<option value="">-- Sélectionne un chapitre --</option>';
-
-  // Vide le textarea quand on change de matière
-  inputText.value = "";
-  selectChapitre.value = "";
-
-  const chapitres = CHAPITRES[matiere] || [];
-
-  if (chapitres.length === 0) {
-    chapitreSelectBox.style.display = "none";
-    return;
-  }
-
-  chapitreSelectBox.style.display = "flex";
-
-  chapitres.forEach((ch) => {
-    const opt = document.createElement("option");
-
-    if (ch.startsWith(" ===")) {
-      // C'est un séparateur
-      opt.value = "";
-      opt.textContent = ch;
-      opt.disabled = true;
-      opt.style.fontWeight = "bold";
-      opt.style.color = "#6366f1";
-    } else {
-      opt.value = ch;
-      opt.textContent = ch;
-    }
-
-    selectChapitre.appendChild(opt);
-  });
-}*/
 
 function updateChapitres(matiere) {
   selectChapitre.innerHTML =
@@ -996,7 +959,7 @@ function render(data) {
 btnGenerate.addEventListener("click", async () => {
   clearUI();
 
-  // Messages rotatifs
+  // ===== Messages rotatifs ======
   const messages = [
     "⏳ Analyse du chapitre...",
     "🧠 L'IA prépare ta fiche...",
@@ -1090,7 +1053,7 @@ btnGenerate.addEventListener("click", async () => {
   } catch (err) {
     clearInterval(interval);
     statusEl.textContent =
-      "⛔ Vous avez atteint votre limite de 1 génération gratuites de PDF aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée. " +
+      "⛔ Vous avez atteint votre limite de 2 générations gratuites de PDF aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée. " +
       err.message;
   }
 });
