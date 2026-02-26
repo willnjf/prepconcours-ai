@@ -44,6 +44,27 @@ const bacExerciceEl = document.getElementById("bacExercice");
 const selectChapitre = document.getElementById("selectChapitre");
 const chapitreSelectBox = document.getElementById("chapitreSelectBox");
 
+// === Scroll animé ===
+function smoothScrollTo(element, duration = 800) {
+  const targetY = element.getBoundingClientRect().top + window.scrollY - 80;
+  const startY = window.scrollY;
+  const diff = targetY - startY;
+  let start = null;
+
+  function step(timestamp) {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const ease =
+      progress < 0.5
+        ? 2 * progress * progress
+        : -1 + (4 - 2 * progress) * progress;
+    window.scrollTo(0, startY + diff * ease);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+
+  requestAnimationFrame(step);
+}
+
 // ====== Structure du menu ======
 const MENU = {
   "bac-general": {
@@ -287,7 +308,7 @@ const CHAPITRES = {
   ],
 
   "bac-maths": [
-    "📐1️⃣ ANALYSE",
+    "📐1 ANALYSE",
     "◆ Fonctions",
     "Les fonctions dérivées",
     "Les fonctions usuelles",
@@ -969,9 +990,37 @@ function render(data) {
 }
 
 // ====== Générer ======
+/*btnGenerate.addEventListener("click", async () => {
+  clearUI();
+  statusEl.textContent = "⏳ Génération IA en cours...";*/
 btnGenerate.addEventListener("click", async () => {
   clearUI();
-  statusEl.textContent = "⏳ Génération IA en cours...";
+
+  // Messages rotatifs
+  const messages = [
+    "⏳ Analyse du chapitre...",
+    "🧠 L'IA prépare ta fiche...",
+    "📝 Génération des exercices...",
+    "🎯 Création du QCM...",
+    "📄 Finalisation de ta fiche...",
+    "🔍 Vérification du contenu...",
+    "🚀 Presque prêt...",
+  ];
+
+  let msgIndex = 0;
+  statusEl.textContent = messages[0];
+  statusEl.style.color = "";
+
+  const interval = setInterval(() => {
+    msgIndex = (msgIndex + 1) % messages.length;
+    statusEl.textContent = messages[msgIndex];
+  }, 2000);
+
+  // ==== Scroll doux vers le message ===
+  // Scroll vers les messages rotatifs
+  setTimeout(() => {
+    smoothScrollTo(statusEl);
+  }, 100);
 
   const text = inputText.value;
 
@@ -1016,6 +1065,8 @@ btnGenerate.addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, language, anonymousId }),
     });
+    // === clear interval ===
+    clearInterval(interval);
 
     const data = await res.json();
 
@@ -1032,7 +1083,14 @@ btnGenerate.addEventListener("click", async () => {
 
     statusEl.textContent = "✅ Terminé";
     render(data);
+
+    // === Scroll vers le résumé ===
+    setTimeout(() => {
+      smoothScrollTo(resumeEl);
+    }, 300);
+   
   } catch (err) {
+    clearInterval(interval);
     statusEl.textContent = "❌ Problème réseau: " + err.message;
   }
 });
