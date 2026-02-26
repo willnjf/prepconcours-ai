@@ -993,9 +993,6 @@ function render(data) {
 }
 
 // ====== Générer ======
-/*btnGenerate.addEventListener("click", async () => {
-  clearUI();
-  statusEl.textContent = "⏳ Génération IA en cours...";*/
 btnGenerate.addEventListener("click", async () => {
   clearUI();
 
@@ -1127,7 +1124,7 @@ btnCorriger.addEventListener("click", () => {
   scoreEl.textContent = `🎯 Score : ${score} / ${currentQCM.length}`;
 });
 
-// =========== Event downloard pdf ==========
+// =========== Event downloard pdf ebs ==========
 btnDownloadPdf.addEventListener("click", async () => {
   try {
     if (!lastEnsData) {
@@ -1152,14 +1149,13 @@ btnDownloadPdf.addEventListener("click", async () => {
       },
     );
 
-    if (!res.ok) {
-      const errData = await res.json();
-      if (res.status === 429) {
-        alert("⛔ " + (errData.error || "Limite PDF atteinte."));
-      } else {
-        alert("❌ Erreur génération PDF");
-      }
-      return;
+    if (res.status === 429) {
+      statusEl.textContent = "⛔ " + (errData.error || "Limite PDF atteinte.");
+      statusEl.style.color = "#ef4444";
+      smoothScrollTo(statusEl);
+    } else {
+      statusEl.textContent = "❌ Erreur génération PDF";
+      statusEl.style.color = "#ef4444";
     }
 
     const blob = await res.blob();
@@ -1202,9 +1198,13 @@ btnDownloadBacPdf.addEventListener("click", async () => {
       },
     );
 
-    if (!res.ok) {
-      alert("Erreur génération PDF BAC");
-      return;
+    if (res.status === 429) {
+      statusEl.textContent = "⛔ " + (errData.error || "Limite PDF atteinte.");
+      statusEl.style.color = "#ef4444";
+      smoothScrollTo(statusEl);
+    } else {
+      statusEl.textContent = "❌ Erreur génération PDF";
+      statusEl.style.color = "#ef4444";
     }
 
     const blob = await res.blob();
