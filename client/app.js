@@ -1150,15 +1150,23 @@ btnDownloadPdf.addEventListener("click", async () => {
         }),
       },
     );
-
-    if (res.status === 429) {
-      statusEl.textContent = "⛔ " + (errData.error || "Limite PDF atteinte.");
-      statusEl.style.color = "#ef4444";
-      smoothScrollTo(statusEl);
-    } else {
-      statusEl.textContent =
-        "⛔ Vous avez atteint votre limite de 1 génération gratuites de PDF aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.";
-      statusEl.style.color = "#ef4444";
+    if (!res.ok) {
+      try {
+        const errData = await res.json();
+        if (res.status === 429) {
+          statusEl.textContent =
+            "⛔ " + (errData.error || "Limite PDF atteinte.");
+          statusEl.style.color = "#ef4444";
+          smoothScrollTo(statusEl);
+        } else {
+          statusEl.textContent = "❌ Erreur génération PDF";
+          statusEl.style.color = "#ef4444";
+        }
+      } catch {
+        statusEl.textContent = "❌ Erreur génération PDF";
+        statusEl.style.color = "#ef4444";
+      }
+      return;
     }
 
     const blob = await res.blob();
