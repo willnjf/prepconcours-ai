@@ -1088,7 +1088,6 @@ btnGenerate.addEventListener("click", async () => {
     setTimeout(() => {
       smoothScrollTo(resumeEl);
     }, 300);
-   
   } catch (err) {
     clearInterval(interval);
     statusEl.textContent = "❌ Problème réseau: " + err.message;
@@ -1135,8 +1134,12 @@ btnDownloadPdf.addEventListener("click", async () => {
     }
 
     const res = await fetch(
+      // ======== Mode Test ========
       //"https://prepconcours-ai-backend.onrender.com/export-ens-pdf",
-      "http://localhost:3000/export-ens-pdf",
+      //"http://localhost:3000/export-ens-pdf",
+
+      // ======= Mode Prod ========
+      `${BASE}/export-ens-pdf`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1181,8 +1184,12 @@ btnDownloadBacPdf.addEventListener("click", async () => {
     }
 
     const res = await fetch(
+      // ========= Mode Test ========
       //"https://prepconcours-ai-backend.onrender.com/export-bac-pdf",
-      "http://localhost:3000/export-bac-pdf",
+      //"http://localhost:3000/export-bac-pdf",
+
+      // ====== Mode Prod =========
+      `${BASE}/export-bac-pdf`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
