@@ -44,6 +44,9 @@ const bacExerciceEl = document.getElementById("bacExercice");
 const selectChapitre = document.getElementById("selectChapitre");
 const chapitreSelectBox = document.getElementById("chapitreSelectBox");
 
+// ===== backend ========
+const BASE = "https://prepconcours-ai-backend.onrender.com";
+
 // === Scroll animé ===
 function smoothScrollTo(element, duration = 800) {
   const targetY = element.getBoundingClientRect().top + window.scrollY - 80;
@@ -1048,7 +1051,6 @@ btnGenerate.addEventListener("click", async () => {
   //const BASE = "http://localhost:3000";
 
   // ==== Production ========
-  const BASE = "https://prepconcours-ai-backend.onrender.com";
 
   const route = ROUTES[mode] || null;
 
