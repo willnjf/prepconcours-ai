@@ -9,6 +9,8 @@ import path from "path";
 
 // ========= Banque de sujets =========
 const DATA_DIR = "./data";
+const LIMITE_GENERATE = 6;
+const LIMITE_PDF = 2;
 
 function loadSujets(niveau, matiere) {
   try {
@@ -135,10 +137,10 @@ app.post("/generate", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 5)) {
+    if (!checkLimit(anonymousId, "generate", LIMITE_GENERATE)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 5 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 
@@ -275,10 +277,10 @@ app.post("/generate-ens", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 5)) {
+    if (!checkLimit(anonymousId, "generate", LIMITE_GENERATE)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 5 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 
@@ -412,7 +414,7 @@ app.post("/export-ens-pdf", async (req, res) => {
     const data = req.body;
     const { anonymousId } = data;
 
-    if (!checkLimit(anonymousId, "pdf", 1)) {
+    if (!checkLimit(anonymousId, "pdf", LIMITE_PDF)) {
       return res.status(429).json({
         error:
           "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
@@ -663,7 +665,7 @@ app.post("/export-bac-pdf", async (req, res) => {
     const data = req.body;
     const { anonymousId } = data;
 
-    if (!checkLimit(anonymousId, "pdf", 1)) {
+    if (!checkLimit(anonymousId, "pdf", LIMITE_PDF)) {
       return res.status(429).json({
         error:
           "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
@@ -903,10 +905,10 @@ app.post("/generate-maths", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 5)) {
+    if (!checkLimit(anonymousId, "generate", LIMITE_GENERATE)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 5 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 
@@ -1038,10 +1040,10 @@ app.post("/generate-pc", async (req, res) => {
   try {
     const { text, language, anonymousId } = req.body;
 
-    if (!checkLimit(anonymousId, "generate", 5)) {
+    if (!checkLimit(anonymousId, "generate", LIMITE_GENERATE)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite de 3 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 5 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 

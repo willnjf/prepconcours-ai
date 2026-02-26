@@ -1089,7 +1089,7 @@ btnGenerate.addEventListener("click", async () => {
     }, 300);
   } catch (err) {
     clearInterval(interval);
-    statusEl.textContent = "❌ Problème réseau: " + err.message;
+    statusEl.textContent = "⛔ Vous avez atteint votre limite de 1 génération gratuites de PDF aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée. " + err.message;
   }
 });
 
@@ -1154,7 +1154,7 @@ btnDownloadPdf.addEventListener("click", async () => {
       statusEl.style.color = "#ef4444";
       smoothScrollTo(statusEl);
     } else {
-      statusEl.textContent = "❌ Erreur génération PDF";
+      statusEl.textContent = "⛔ Vous avez atteint votre limite de 1 génération gratuites de PDF aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.";
       statusEl.style.color = "#ef4444";
     }
 
