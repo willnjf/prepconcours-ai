@@ -140,7 +140,7 @@ app.post("/generate", async (req, res) => {
     if (!checkLimit(anonymousId, "generate", LIMITE_GENERATE)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite de 5 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 6 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 
@@ -280,7 +280,7 @@ app.post("/generate-ens", async (req, res) => {
     if (!checkLimit(anonymousId, "generate", LIMITE_GENERATE)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite de 5 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 6 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 
@@ -417,7 +417,7 @@ app.post("/export-ens-pdf", async (req, res) => {
     if (!checkLimit(anonymousId, "pdf", LIMITE_PDF)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 2 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 
@@ -668,7 +668,7 @@ app.post("/export-bac-pdf", async (req, res) => {
     if (!checkLimit(anonymousId, "pdf", LIMITE_PDF)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite d'1 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 2 PDF gratuit aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 
@@ -908,7 +908,7 @@ app.post("/generate-maths", async (req, res) => {
     if (!checkLimit(anonymousId, "generate", LIMITE_GENERATE)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite de 5 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 6 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 
@@ -1043,7 +1043,7 @@ app.post("/generate-pc", async (req, res) => {
     if (!checkLimit(anonymousId, "generate", LIMITE_GENERATE)) {
       return res.status(429).json({
         error:
-          "Vous avez atteint votre limite de 5 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
+          "Vous avez atteint votre limite de 6 générations gratuites aujourd'hui. Revenez demain ou contactez-nous sur WhatsApp pour accéder à la version Premium illimitée.",
       });
     }
 
