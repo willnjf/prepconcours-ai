@@ -13,7 +13,6 @@
           <div class="logo-dot"></div>
           <span>PrepConcours AI</span>
         </div>
-
         <div class="badges">
           <span class="badge badge-bac" id="badgeBac">BAC</span>
           <span class="badge badge-ens" id="badgeEns">ENS</span>
@@ -25,21 +24,18 @@
       <h1>Prepa Baccalauréat & Concours Nationaux 🇨🇲</h1>
       <p id="aide">
         💡 <strong>Comment utiliser PrepConcours AI ?</strong><br />
-        <span>
-          1️⃣ Choisis ta <strong>catégorie</strong>, ta <strong>série</strong> et
-          ta <strong>matière</strong> ci-dessus.<br />
-          2️⃣ <strong>Sélectionne un chapitre</strong> dans la liste
-          <em>ou</em> colle directement ton cours dans la zone de texte.<br />
-          3️⃣ Clique sur <strong>Générer</strong> et reçois ta fiche complète en
-          30 secondes ! 🚀 </span
-        >.
+        1️⃣ Choisis ta <strong>catégorie</strong>, ta <strong>série</strong> et
+        ta <strong>matière</strong>.<br />
+        2️⃣ <strong>Sélectionne un chapitre</strong> dans la liste
+        <em>ou</em> colle ton cours.<br />
+        3️⃣ Clique sur <strong>Générer</strong> et reçois ta fiche en 30 secondes
+        ! 🚀
       </p>
 
-      <!-- Choisir le mode-->
-      <div class="controls">
-        <!-- ====== Menu Sélection ====== -->
+      <!-- ====== Formulaire ====== -->
+      <section class="card">
+        <!-- Menu Sélection -->
         <div class="menu-selection">
-          <!-- Niveau 1 : Catégories -->
           <div class="menu-categories">
             <button class="cat-btn active" data-cat="bac-general">
               🎓 BAC Général
@@ -51,7 +47,6 @@
             <button class="cat-btn" data-cat="concours">🏆 Concours</button>
           </div>
 
-          <!-- Niveau 2 : Série -->
           <div class="menu-row">
             <div class="menu-group">
               <label>Série</label>
@@ -59,16 +54,12 @@
                 <option value="">-- Choisir --</option>
               </select>
             </div>
-
-            <!-- Niveau 3 : Matière -->
             <div class="menu-group">
               <label>Matière</label>
               <select id="selectMatiere">
                 <option value="">-- Choisir --</option>
               </select>
             </div>
-
-            <!-- Langue -->
             <div class="menu-group">
               <label>Langue</label>
               <select id="lang">
@@ -78,99 +69,102 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Sélection chapitre -->
-      <div class="chapitre-select" id="chapitreSelectBox">
-        <label class="chapitre-label"> Choisis un chapitre </label>
-        <select id="selectChapitre">
-          <option value="">-- Sélectionne un chapitre --</option>
-        </select>
-      </div>
+        <!-- Sélection chapitre -->
+        <div class="chapitre-select" id="chapitreSelectBox">
+          <label class="chapitre-label">Choisis un chapitre</label>
+          <select id="selectChapitre">
+            <option value="">-- Sélectionne un chapitre --</option>
+          </select>
+        </div>
 
-      <!-- Séparateur -->
-      <div class="ou-separateur">
-        <span>OU</span>
-      </div>
+        <!-- Séparateur -->
+        <div class="ou-separateur">
+          <span>OU</span>
+        </div>
 
-      <!-- Zone texte libre -->
-      <div class="texte-libre">
-        <label class="chapitre-label"> Colle ton cours ci-dessous </label>
-        <textarea
-          id="inputText"
-          placeholder="Colle ici ton chapitre de cours SVT, Maths... (minimum 50 caractères)"
-          rows="6"
-        ></textarea>
-      </div>
+        <!-- Zone texte libre -->
+        <div class="texte-libre">
+          <label class="chapitre-label">Colle ton cours ci-dessous</label>
+          <textarea
+            id="inputText"
+            placeholder="Colle ici ton chapitre de cours... (min 3 caractères)"
+            rows="6"
+          ></textarea>
+        </div>
 
-      <!-- Button Generate -->
-      <button id="btnTest" type="button">Générer</button>
-      <p class="disclaimer">
-        ⚠️ Contenu généré par IA à titre indicatif. Consultez votre enseignant
-        pour validation.
-      </p>
+        <!-- Toggle Mode -->
+        <div class="toggle-mode">
+          <span class="toggle-label active" id="labelNormal">📚 Normal</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleOptimise" />
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label" id="labelOptimise">🎯 Optimisé BAC</span>
+        </div>
 
-      <main class="layout">
-        <!-- toutes tes sections ici -->
+        <!-- Bouton Générer -->
+        <button id="btnTest" type="button">Générer</button>
+        <p class="disclaimer">
+          ⚠️ Contenu généré par IA à titre indicatif. Consultez votre enseignant
+          pour validation.
+        </p>
+      </section>
+
+      <!-- ====== Résultats ====== -->
+      <div class="layout">
         <section class="card">
           <h2>Résumé</h2>
           <p id="resume"></p>
         </section>
-        <!-- sections points clés ici -->
+
         <section class="card">
           <h2>Points clés</h2>
           <ul id="pointsCles"></ul>
         </section>
 
-        <!-- sections ici plan de révision 7 jours-->
         <section class="card" id="ensPlanSection" style="display: none">
           <h2>Plan de révision (7 jours) — ENS</h2>
           <div id="ensPlan"></div>
         </section>
 
-        <!-- sections pièges fréquents ici -->
         <section class="card" id="ensPiegesSection" style="display: none">
           <h2>Pièges fréquents — ENS</h2>
           <ul id="ensPieges"></ul>
         </section>
 
-        <!-- sections questions longues ici -->
         <section class="card" id="ensLongSection" style="display: none">
           <h2>Questions longues type ENS</h2>
           <div id="ensLong"></div>
         </section>
 
-        <!-- sections mini-barème ici -->
         <section class="card" id="ensBaremeSection" style="display: none">
           <h2>Mini-barème ENS (simulation 20 pts)</h2>
           <ul id="ensBareme"></ul>
         </section>
 
-        <!-- Button Downloard pdf ens -->
-        
-
-        <!-- Button Downloard pdf bac D -->
-       
-
-        <!-- sections Exercice type ens + corrigé ici -->
         <section class="card" id="ensExerciceSection" style="display: none">
           <h2>Exercice type ENS + Corrigé</h2>
           <div id="ensExercice"></div>
         </section>
 
-        <!-- sections flashcards ici -->
         <section class="card">
           <h2>Flashcards</h2>
           <div id="flashcards" class="grid"></div>
         </section>
 
-        <!-- sections Exercice type Examen BAC D -->
         <section class="card" id="bacExerciceSection" style="display: none">
-          <h2>Exercice type Examen BAC D</h2>
+          <h2>Exercice type Examen BAC</h2>
           <div id="bacExercice"></div>
         </section>
 
-        <!-- sections QCM ici -->
+        <section class="card" id="optimiseSection" style="display: none">
+          <div class="bloc-optimise">
+            <h2 id="titreOptimise">🎯 Optimisé BAC</h2>
+            <div id="optimiseContent"></div>
+          </div>
+        </section>
+
         <section class="card" id="qcmSection">
           <h2>QCM</h2>
           <div id="qcm"></div>
@@ -178,24 +172,27 @@
           <p id="score"></p>
         </section>
 
-        <!-- sections Mots-clés ici -->
         <section class="card">
           <h2>Mots-clés</h2>
           <div id="motsCles" class="tags"></div>
         </section>
 
-        <!-- Button Downloard pdf bac D -->
-         <button id="btnDownloadBacPdf" style="display: none">
-          📄 Télécharger le PDF  
+        <button id="btnDownloadBacPdf" style="display: none">
+          📄 Télécharger le PDF
+        </button>
+
+        <button id="btnDownloadOptimisePdf" style="display: none">
+          🎯 Télécharger le PDF Optimisé
         </button>
 
         <button id="btnDownloadPdf" type="button" style="display: none">
-          📄 Télécharger le PDF 
+          📄 Télécharger le PDF
         </button>
-      </main>
+      </div>
 
       <p id="status" class="status"></p>
     </main>
+
     <script src="./lang.js"></script>
     <script src="./app.js"></script>
   </body>

@@ -40,12 +40,54 @@ const btnDownloadBacPdf = document.getElementById("btnDownloadBacPdf");
 const bacExerciceSection = document.getElementById("bacExerciceSection");
 const bacExerciceEl = document.getElementById("bacExercice");
 
+// =========== Optimisation BAC ==============
+const toggleOptimise = document.getElementById("toggleOptimise");
+const optimiseSection = document.getElementById("optimiseSection");
+const optimiseContent = document.getElementById("optimiseContent");
+const labelNormal = document.getElementById("labelNormal");
+const labelOptimise = document.getElementById("labelOptimise");
+
 // ← Ajoute ces deux lignes ici
 const selectChapitre = document.getElementById("selectChapitre");
 const chapitreSelectBox = document.getElementById("chapitreSelectBox");
 
+const titreOptimise = document.getElementById("titreOptimise");
+const btnDownloadOptimisePdf = document.getElementById(
+  "btnDownloadOptimisePdf",
+);
+
+// === garde pour test en local ====
+const BASE = "http://localhost:3000";
+
 // ===== backend ========
-const BASE = "https://prepconcours-ai-backend.onrender.com";
+//const BASE = "https://prepconcours-ai-backend.onrender.com";
+
+// Toggle ON/OFF
+toggleOptimise.addEventListener("change", () => {
+  /*if (toggleOptimise.checked) {
+    labelNormal.classList.remove("active");
+    labelOptimise.classList.add("active");
+  } else {
+    labelNormal.classList.add("active");
+    labelOptimise.classList.remove("active");
+  }*/
+  if (toggleOptimise.checked) {
+    btnDownloadPdf.style.display = "none";
+    btnDownloadBacPdf.style.display = "none";
+    btnDownloadOptimisePdf.style.display = "inline-block";
+  } else if (currentMatiere === "ens-svt") {
+    btnDownloadPdf.style.display = "inline-block";
+    btnDownloadBacPdf.style.display = "none";
+    btnDownloadOptimisePdf.style.display = "none";
+  } else {
+    btnDownloadPdf.style.display = "none";
+    btnDownloadBacPdf.style.display = "inline-block";
+    btnDownloadOptimisePdf.style.display = "none";
+  }
+});
+
+// Initialisation
+labelNormal.classList.add("active");
 
 // === Scroll animé ===
 function smoothScrollTo(element, duration = 800) {
@@ -84,17 +126,17 @@ const MENU = {
       "bac-c": {
         label: "Série C",
         matieres: {
-          "bac-c-maths": { label: "Mathématiques", actif: false },
-          "bac-c-pc": { label: "Physique-Chimie", actif: false },
-          "bac-c-svt": { label: "SVT", actif: false },
+          "bac-c-maths": { label: "Mathématiques", actif: true },
+          "bac-c-pc": { label: "Physique-Chimie", actif: true },
+          "bac-c-svt": { label: "SVT", actif: true },
         },
       },
       "bac-a": {
         label: "Série A",
         matieres: {
-          "bac-a-français": { label: "Français", actif: false },
-          "bac-a-philo": { label: "Philosophie", actif: false },
-          "bac-a-histgeo": { label: "Histoire-Géographie", actif: false },
+          "bac-a-francais": { label: "Francais", actif: true },
+          "bac-a-philosophie": { label: "Philosophie", actif: true },
+          "bac-a-histoire-geo": { label: "Histoire-Géographie", actif: true },
         },
       },
     },
@@ -161,10 +203,10 @@ const MENU = {
       "bac-f4": {
         label: "F4 - Génie Civil",
         matieres: {
-          "f4-maths": { label: "Mathématiques", actif: false },
-          "f4-physique": { label: "Physique", actif: false },
-          "f4-techno": { label: "Technologie du Bâtiment", actif: false },
-          "f4-dessin": { label: "Dessin Technique", actif: false },
+          "f4-maths": { label: "Mathématiques", actif: true },
+          "f4-physique": { label: "Physique", actif: true },
+          "f4-techno": { label: "Technologie du Bâtiment", actif: true },
+          "f4-dessin": { label: "Dessin Technique", actif: true },
         },
       },
       "bac-f5": {
@@ -423,6 +465,524 @@ const CHAPITRES = {
     "Les esters et savons",
   ],
 
+  "bac-c-maths": [
+    "📐 1 ANALYSE",
+    "◆ Limites et continuité",
+    "Les limites de fonctions",
+    "La continuité des fonctions",
+    "◆ Dérivation",
+    "Les fonctions dérivées",
+    "L'étude complète de fonctions",
+    "◆ Fonctions usuelles",
+    "Les fonctions logarithme",
+    "Les fonctions exponentielles",
+    "◆ Intégration",
+    "Les primitives",
+    "Les intégrales",
+    "Les équations différentielles",
+    "◆ Suites",
+    "Les suites numériques",
+    "Les suites arithmétiques et géométriques",
+
+    "🔢 2 ALGÈBRE",
+    "◆ Nombres complexes",
+    "Les nombres complexes forme algébrique",
+    "Les nombres complexes forme trigonométrique",
+    "◆ Arithmétique",
+    "Le PGCD et les congruences",
+    "La divisibilité",
+    "◆ Matrices",
+    "Les matrices [À VÉRIFIER]",
+
+    "📏 3 GÉOMÉTRIE",
+    "◆ Géométrie dans l'espace",
+    "La géométrie vectorielle dans l'espace",
+    "Les droites et plans dans l'espace",
+    "◆ Métriques",
+    "Le produit scalaire",
+    "Les distances et angles",
+    "Les transformations géométriques",
+
+    "📊 4 PROBABILITÉS & STATISTIQUES",
+    "◆ Probabilités",
+    "Les variables aléatoires",
+    "La loi binomiale",
+    "L'espérance mathématique",
+    "◆ Statistiques",
+    "Les statistiques descriptives",
+  ],
+
+  "bac-a-francais": [
+    "📖 1 LANGUE ET EXPRESSION",
+    "◆ Grammaire et syntaxe",
+    "Les fonctions grammaticales",
+    "La syntaxe de la phrase complexe",
+    "Les propositions subordonnées",
+    "◆ Lexique et stylistique",
+    "Les figures de style",
+    "Le champ lexical et sémantique",
+    "La formation des mots",
+    "◆ Expression écrite",
+    "La dissertation littéraire",
+    "Le commentaire composé",
+    "Le résumé et la synthèse",
+
+    "📚 2 LITTÉRATURE",
+    "◆ Genres littéraires",
+    "Le roman et la nouvelle",
+    "La poésie et ses formes",
+    "Le théâtre et ses genres",
+    "◆ Mouvements littéraires",
+    "Le classicisme et l'humanisme",
+    "Le romantisme",
+    "Le réalisme et le naturalisme",
+    "Le surréalisme et les avant-gardes",
+    "◆ Littérature africaine et francophone",
+    "Les grands auteurs africains francophones",
+    "Les thèmes de la littérature africaine",
+    "La négritude",
+
+    "✍️ 3 MÉTHODOLOGIE",
+    "◆ Techniques d'analyse",
+    "L'analyse d'un texte littéraire",
+    "L'explication linéaire",
+    "◆ Production écrite",
+    "La rédaction d'une dissertation",
+    "L'écriture d'invention",
+    "La contraction de texte",
+  ],
+
+  "bac-a-philosophie": [
+    "🧠 1 LA CONNAISSANCE",
+    "◆ La vérité et la raison",
+    "La vérité et ses critères",
+    "La raison et l'expérience",
+    "La démonstration et le raisonnement",
+    "◆ La science",
+    "Les méthodes scientifiques",
+    "La relation science et technique",
+    "Les limites de la science",
+
+    "👤 2 L'ÊTRE HUMAIN ET LA SOCIÉTÉ",
+    "◆ La conscience et l'inconscient",
+    "La conscience et la connaissance de soi",
+    "L'inconscient freudien",
+    "◆ La liberté et la responsabilité",
+    "La liberté comme valeur fondamentale",
+    "Le déterminisme et le libre arbitre",
+    "La responsabilité morale",
+    "◆ Autrui et la société",
+    "La relation à l'autre",
+    "Le langage et la communication",
+    "La culture et la nature",
+
+    "⚖️ 3 MORALE ET POLITIQUE",
+    "◆ L'éthique",
+    "Les théories morales",
+    "Le devoir et la vertu",
+    "Les droits de l'homme",
+    "◆ La politique",
+    "L'État et le pouvoir",
+    "La démocratie et ses formes",
+    "La justice et le droit",
+
+    "🌍 4 MÉTAPHYSIQUE ET RELIGION",
+    "◆ L'existence et le sens",
+    "Les grandes questions existentielles",
+    "La religion et la foi",
+    "◆ Grands courants philosophiques",
+    "Le rationalisme et l'empirisme",
+    "L'existentialisme",
+    "La philosophie africaine",
+  ],
+
+  "bac-a-histoire-geo": [
+    "🏛️ 1 HISTOIRE",
+    "◆ Le monde au XIXe siècle",
+    "Les révolutions industrielles",
+    "Les nationalismes en Europe",
+    "La colonisation de l'Afrique",
+    "◆ Les guerres mondiales",
+    "Les causes et le déroulement de la 1ère GM",
+    "Les causes et le déroulement de la 2ème GM",
+    "Les conséquences des guerres mondiales",
+    "◆ Le monde après 1945",
+    "La guerre froide",
+    "La décolonisation africaine",
+    "La création de l'ONU et les organisations internationales",
+    "◆ L'Afrique et le Cameroun",
+    "Les grands empires africains précoloniaux",
+    "La résistance à la colonisation",
+    "L'histoire politique du Cameroun indépendant",
+
+    "🌍 2 GÉOGRAPHIE",
+    "◆ Géographie physique",
+    "Les milieux naturels africains",
+    "Le relief et l'hydrographie",
+    "Les climats et la végétation",
+    "◆ Géographie humaine",
+    "La démographie africaine",
+    "Les migrations et l'urbanisation",
+    "Les populations et leurs dynamiques",
+    "◆ Géographie économique",
+    "Les ressources naturelles de l'Afrique",
+    "Le développement économique africain",
+    "Les grandes puissances mondiales",
+    "◆ Géographie du Cameroun",
+    "Les régions naturelles du Cameroun",
+    "L'économie camerounaise",
+    "Le Cameroun dans la sous-région CEMAC",
+
+    "🗺️ 3 MÉTHODOLOGIE",
+    "◆ Outils géographiques",
+    "La lecture et l'analyse de cartes",
+    "La construction de croquis et schémas",
+    "◆ Production écrite",
+    "La composition en histoire",
+    "La composition en géographie",
+    "Le commentaire de document historique",
+  ],
+
+  // =============== BAC TECHNIQUES =====================
+  // ==== tech ====
+  "f4-techno": [
+    "🏗️ 1 MATÉRIAUX DE CONSTRUCTION",
+    "◆ Liants et bétons",
+    "Les liants hydrauliques (ciment, chaux)",
+    "La composition et fabrication du béton",
+    "Le béton armé : principes et mise en œuvre",
+    "◆ Granulats et adjuvants",
+    "Les granulats : sable, gravier, ballast",
+    "Les adjuvants et leur rôle",
+    "◆ Autres matériaux",
+    "Les matériaux de maçonnerie (parpaing, brique, pierre)",
+    "Les matériaux métalliques en construction",
+    "Le bois et les matériaux composites",
+    "Les matériaux d'étanchéité et d'isolation",
+
+    "🧱 2 FONDATIONS ET TERRASSEMENT",
+    "◆ Terrassement",
+    "Les travaux de terrassement",
+    "Les engins de terrassement",
+    "Le compactage des sols",
+    "◆ Fondations superficielles",
+    "Les semelles isolées",
+    "Les semelles filantes",
+    "Les radiers",
+    "◆ Fondations profondes",
+    "Les pieux et leurs types",
+    "Les barrettes et parois moulées",
+    "Le dimensionnement des fondations",
+
+    "🏛️ 3 STRUCTURE ET OSSATURE",
+    "◆ Maçonnerie et murs",
+    "Les murs porteurs en maçonnerie",
+    "Les murs de refend et voiles béton",
+    "Les chaînages horizontaux et verticaux",
+    "◆ Poteaux et poutres",
+    "Les poteaux en béton armé",
+    "Les poutres et leur calcul",
+    "Les portiques et ossatures",
+    "◆ Planchers",
+    "Les planchers corps creux",
+    "Les dalles pleines",
+    "Les planchers préfabriqués",
+    "Le calcul des planchers",
+
+    "🔺 4 CHARPENTE ET TOITURE",
+    "◆ Charpente traditionnelle",
+    "Les éléments de la charpente en bois",
+    "Les fermes et leur dimensionnement",
+    "L'assemblage des pièces de charpente",
+    "◆ Charpente métallique",
+    "Les profilés métalliques",
+    "Les assemblages boulonnés et soudés",
+    "◆ Couverture",
+    "Les types de toiture (tuiles, tôles, terrasse)",
+    "L'étanchéité des toitures",
+    "L'isolation thermique des toitures",
+
+    "🚪 5 SECOND ŒUVRE",
+    "◆ Revêtements",
+    "Les enduits et crépis",
+    "Les carrelages et faïences",
+    "Les peintures et revêtements muraux",
+    "◆ Menuiserie",
+    "La menuiserie bois (portes, fenêtres)",
+    "La menuiserie aluminium et PVC",
+    "◆ Plomberie et assainissement",
+    "Les réseaux d'alimentation en eau",
+    "Les réseaux d'évacuation et assainissement",
+    "◆ Électricité du bâtiment",
+    "Les installations électriques",
+    "Les normes électriques en bâtiment",
+
+    "📐 6 RÉSISTANCE DES MATÉRIAUX",
+    "◆ Notions fondamentales",
+    "Les efforts internes : traction, compression, flexion",
+    "Les contraintes et déformations",
+    "Le module d'élasticité (loi de Hooke)",
+    "◆ Calculs de résistance",
+    "Le calcul des poutres en flexion simple",
+    "Le calcul des poteaux en compression",
+    "Le flambement des pièces comprimées",
+    "◆ Béton armé calcul",
+    "Le calcul des sections en béton armé",
+    "La vérification des états limites (ELU/ELS)",
+    "Le ferraillage des éléments structuraux",
+
+    "🗺️ 7 TOPOGRAPHIE ET IMPLANTATION",
+    "◆ Topographie",
+    "Les instruments de mesure topographique",
+    "Le nivellement et les altitudes",
+    "Le levé de plans topographiques",
+    "◆ Implantation",
+    "L'implantation d'un ouvrage",
+    "Les calculs de cubature",
+    "Les terrassements en déblai et remblai",
+
+    "📋 8 ORGANISATION ET GESTION DE CHANTIER",
+    "◆ Planification",
+    "Le planning de chantier (Gantt, PERT)",
+    "Les modes d'organisation du chantier",
+    "◆ Documents techniques",
+    "La lecture et interprétation des plans",
+    "Le cahier des charges (CCTP)",
+    "Les métrés et devis quantitatifs",
+    "◆ Sécurité chantier",
+    "Les règles de sécurité sur chantier",
+    "Les équipements de protection individuelle",
+  ],
+
+  // =========== f4 maths ========
+  "f4-maths": [
+    "📐 1 ANALYSE",
+    "◆ Fonctions et limites",
+    "Les fonctions numériques",
+    "Les limites de fonctions",
+    "La continuité des fonctions",
+    "◆ Dérivation",
+    "Les fonctions dérivées",
+    "L'étude de fonctions appliquée au bâtiment",
+    "◆ Intégration",
+    "Les primitives et intégrales",
+    "Les applications des intégrales (aires, volumes)",
+
+    "📊 2 STATISTIQUES ET PROBABILITÉS",
+    "◆ Statistiques",
+    "Les statistiques descriptives",
+    "Les moyennes et dispersions",
+    "La représentation graphique des données",
+    "◆ Probabilités",
+    "Les probabilités de base",
+    "Les variables aléatoires",
+
+    "📏 3 GÉOMÉTRIE APPLIQUÉE",
+    "◆ Géométrie plane",
+    "Les figures planes et leurs propriétés",
+    "Les aires et périmètres",
+    "Les transformations géométriques",
+    "◆ Géométrie dans l'espace",
+    "Les solides géométriques",
+    "Les volumes et surfaces",
+    "Les sections planes de solides",
+    "◆ Trigonométrie appliquée",
+    "Les fonctions trigonométriques",
+    "La résolution de triangles",
+    "Les applications en topographie",
+
+    "🔢 4 ALGÈBRE APPLIQUÉE",
+    "◆ Équations et systèmes",
+    "Les équations du 1er et 2ème degré",
+    "Les systèmes d'équations linéaires",
+    "Les inéquations",
+    "◆ Calcul matriciel",
+    "Les matrices et opérations",
+    "La résolution de systèmes par matrices",
+    "◆ Suites numériques",
+    "Les suites arithmétiques",
+    "Les suites géométriques",
+    "Les applications financières (intérêts, amortissement)",
+
+    "🏗️ 5 MATHÉMATIQUES APPLIQUÉES AU BÂTIMENT",
+    "◆ Métrés et cubatures",
+    "Le calcul des surfaces de bâtiment",
+    "Le calcul des volumes de terrassement",
+    "Les métrés de maçonnerie et béton",
+    "◆ Résistance des matériaux (calculs)",
+    "Les calculs de contraintes normales",
+    "Les calculs de déformations",
+    "Les moments fléchissants et efforts tranchants",
+    "◆ Hydraulique appliquée",
+    "Les calculs de débit et pression",
+    "Le dimensionnement des canalisations",
+  ],
+
+  // ====== f4 Dessin ======
+
+  "f4-dessin": [
+    "✏️ 1 NORMES ET CONVENTIONS",
+    "◆ Normalisation",
+    "Les normes de dessin technique (ISO)",
+    "Les formats de papier et cartouches",
+    "Les types de traits et leurs significations",
+    "Les échelles et leur utilisation",
+    "◆ Écriture normalisée",
+    "Les chiffres et lettres normalisés",
+    "La cotation normalisée",
+    "Les symboles et abréviations",
+
+    "📐 2 GÉOMÉTRIE DESCRIPTIVE",
+    "◆ Projections orthogonales",
+    "Le principe des projections orthogonales",
+    "Les vues : face, dessus, profil",
+    "La correspondance entre les vues",
+    "◆ Coupes et sections",
+    "Les coupes simples",
+    "Les coupes brisées et partielles",
+    "Les sections droites et obliques",
+    "◆ Perspectives",
+    "La perspective cavalière",
+    "La perspective isométrique",
+    "La perspective axonométrique",
+
+    "🏗️ 3 DESSIN DE BÂTIMENT",
+    "◆ Plans architecturaux",
+    "Le plan de masse",
+    "Le plan de situation",
+    "Le plan d'implantation",
+    "◆ Plans d'exécution",
+    "Le plan de fondations",
+    "Le plan de coffrage",
+    "Le plan de ferraillage",
+    "◆ Coupes et façades",
+    "Les coupes verticales de bâtiment",
+    "Les façades et élévations",
+    "Les détails d'exécution",
+
+    "🔺 4 DESSIN DE CHARPENTE ET TOITURE",
+    "◆ Charpente bois",
+    "Le dessin des fermes en bois",
+    "Les assemblages et détails de charpente",
+    "◆ Charpente métallique",
+    "Le dessin des profilés métalliques",
+    "Les assemblages boulonnés et soudés",
+    "◆ Toiture",
+    "Le dessin de toiture en plan",
+    "Les coupes de toiture",
+    "Les noues et arêtiers",
+
+    "🚰 5 DESSIN DES RÉSEAUX",
+    "◆ Plomberie",
+    "Le schéma des réseaux d'eau",
+    "Les symboles de plomberie",
+    "◆ Assainissement",
+    "Le schéma d'assainissement",
+    "Les réseaux EP et EU",
+    "◆ Électricité",
+    "Le schéma électrique du bâtiment",
+    "Les symboles électriques normalisés",
+
+    "💻 6 DAO - DESSIN ASSISTÉ PAR ORDINATEUR",
+    "◆ Initiation au DAO",
+    "Les logiciels de DAO (AutoCAD, ArchiCAD)",
+    "L'interface et les commandes de base",
+    "◆ Production de plans",
+    "La création de plans 2D",
+    "La mise en page et l'impression",
+    "L'export et les formats de fichiers",
+
+    "📋 7 LECTURE ET INTERPRÉTATION DE PLANS",
+    "◆ Lecture de plans",
+    "L'identification des éléments sur un plan",
+    "La lecture des cotations et symboles",
+    "L'interprétation des coupes",
+    "◆ Implantation sur chantier",
+    "Le report des mesures depuis le plan",
+    "La vérification de la conformité",
+  ],
+
+  // ====== f4 physique ======
+
+  "f4-physique": [
+    "⚡ 1 MÉCANIQUE APPLIQUÉE",
+    "◆ Statique",
+    "Les forces et leurs caractéristiques",
+    "L'équilibre des solides",
+    "Les moments de forces",
+    "Les conditions d'équilibre",
+    "◆ Résistance des matériaux",
+    "Les contraintes de traction et compression",
+    "Les contraintes de cisaillement",
+    "La flexion simple des poutres",
+    "Le flambement des pièces comprimées",
+    "◆ Cinématique",
+    "Le mouvement rectiligne uniforme",
+    "Le mouvement rectiligne uniformément varié",
+    "Les machines de chantier (vitesse, puissance)",
+
+    "🌊 2 HYDRAULIQUE",
+    "◆ Hydrostatique",
+    "La pression hydrostatique",
+    "La poussée d'Archimède",
+    "La pression dans les fluides au repos",
+    "◆ Hydrodynamique",
+    "L'écoulement des fluides",
+    "Le débit et la vitesse d'écoulement",
+    "Le théorème de Bernoulli",
+    "◆ Applications hydrauliques",
+    "Les pompes et leur fonctionnement",
+    "Le dimensionnement des canalisations",
+    "L'assainissement et les réseaux d'eau",
+
+    "🌡️ 3 THERMIQUE DU BÂTIMENT",
+    "◆ Transferts thermiques",
+    "La conduction thermique",
+    "La convection thermique",
+    "Le rayonnement thermique",
+    "◆ Isolation thermique",
+    "La résistance thermique des matériaux",
+    "Le coefficient U (déperditions thermiques)",
+    "Le calcul des ponts thermiques",
+    "◆ Confort thermique",
+    "La ventilation et le renouvellement d'air",
+    "La climatisation et le chauffage",
+    "Les normes thermiques en construction",
+
+    "🔌 4 ÉLECTRICITÉ APPLIQUÉE AU BÂTIMENT",
+    "◆ Courant continu",
+    "La loi d'Ohm",
+    "Les circuits série et parallèle",
+    "La puissance et l'énergie électrique",
+    "◆ Courant alternatif",
+    "Le courant alternatif sinusoïdal",
+    "Les valeurs efficaces et de crête",
+    "La puissance active et réactive",
+    "◆ Installations électriques",
+    "Les sections de câbles et disjoncteurs",
+    "La mise à la terre et sécurité",
+    "Les normes électriques NFC 15-100",
+
+    "🔊 5 ACOUSTIQUE DU BÂTIMENT",
+    "◆ Notions d'acoustique",
+    "Le son et ses caractéristiques",
+    "Le niveau sonore en décibels",
+    "◆ Isolation acoustique",
+    "La transmission du son dans les bâtiments",
+    "Les matériaux absorbants et isolants",
+    "Les normes acoustiques en construction",
+
+    "💡 6 ÉCLAIRAGE ET OPTIQUE",
+    "◆ Notions d'éclairage",
+    "Le flux lumineux et l'éclairement",
+    "Les sources lumineuses naturelles et artificielles",
+    "◆ Conception de l'éclairage",
+    "Le calcul d'un projet d'éclairage",
+    "Les normes d'éclairage en bâtiment",
+    "L'éclairage de sécurité",
+  ],
+
+  // ===== Concours ENS =====================
   "ens-svt": [
     "🧬 1 BIOLOGIE CELLULAIRE AVANCÉE",
     "◆ Division cellulaire",
@@ -521,8 +1081,8 @@ function updateMatieres(cat, serie) {
   }
   // appelle de updatechapitres
   updateChapitres(firstActif ? firstActif[0] : "");
+  updateToggleLabel();
 }
-
 
 function updateChapitres(matiere) {
   selectChapitre.innerHTML =
@@ -566,6 +1126,40 @@ function updateChapitres(matiere) {
     selectChapitre.appendChild(opt);
   });
 }
+
+// ← Ajoute ici
+function updateToggleLabel() {
+  const MATIERES_CONCOURS = [
+    "ens-svt",
+    "ens-maths",
+    "ens-physique",
+    "enset-maths",
+    "enset-physique",
+    "enset-info",
+    "poly-maths",
+    "poly-pc",
+    "enam-culture",
+    "enam-droit",
+    "enam-economie",
+    "esstic-culture",
+    "esstic-français",
+    "esstic-com",
+    "fmsb-svt",
+    "fmsb-pc",
+    "fmsb-maths",
+    "iai-info",
+    "iai-maths",
+  ];
+
+  if (MATIERES_CONCOURS.includes(currentMatiere)) {
+    labelOptimise.textContent = "🏆 Optimisé Concours";
+    titreOptimise.textContent = "🏆 Optimisé Concours";
+  } else {
+    labelOptimise.textContent = "🎯 Optimisé BAC";
+    titreOptimise.textContent = "🎯 Optimisé BAC";
+  }
+}
+
 // Quand l'étudiant choisit un chapitre
 selectChapitre.addEventListener("change", () => {
   if (selectChapitre.value) {
@@ -591,8 +1185,8 @@ catBtns.forEach((btn) => {
     catBtns.forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     currentCat = btn.dataset.cat;
-    // Initialisation
     updateSeries(currentCat);
+    updateToggleLabel();
     updateChapitres(currentMatiere);
   });
 });
@@ -601,20 +1195,72 @@ catBtns.forEach((btn) => {
 selectSerie.addEventListener("change", () => {
   currentSerie = selectSerie.value;
   updateMatieres(currentCat, currentSerie);
+  updateToggleLabel();
 });
 
 // Changement de matière
 selectMatiere.addEventListener("change", () => {
   currentMatiere = selectMatiere.value;
-});
-//tests
-selectMatiere.addEventListener("change", () => {
-  currentMatiere = selectMatiere.value;
   updateChapitres(currentMatiere);
+  updateToggleLabel();
+});
+
+// ====== PDF Optimisé ======
+btnDownloadOptimisePdf.addEventListener("click", async () => {
+  try {
+    if (!lastBacData) {
+      statusEl.textContent = "⛔ Génère d'abord une fiche Optimisée !";
+      return;
+    }
+
+    const res = await fetch(`${BASE}/export-optimise-pdf`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        anonymousId,
+        ...lastBacData,
+      }),
+    });
+
+    if (!res.ok) {
+      try {
+        const errData = await res.json();
+        if (res.status === 429) {
+          statusEl.textContent =
+            "⛔ " + (errData.error || "Limite PDF atteinte.");
+          statusEl.style.color = "#ef4444";
+          smoothScrollTo(statusEl);
+        } else {
+          statusEl.textContent = "❌ Erreur génération PDF Optimisé";
+          statusEl.style.color = "#ef4444";
+        }
+      } catch {
+        statusEl.textContent = "❌ Erreur génération PDF Optimisé";
+        statusEl.style.color = "#ef4444";
+      }
+      return;
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Optimise_PrepConcours.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "❌ Erreur réseau PDF Optimisé";
+    statusEl.style.color = "#ef4444";
+  }
 });
 
 // Initialisation
 updateSeries(currentCat);
+updateToggleLabel();
+updateChapitres(currentMatiere);
 
 // ====== id ========
 function getOrCreateAnonymousId() {
@@ -666,10 +1312,13 @@ function clearUI() {
   scoreEl.textContent = "";
   bacExerciceSection.style.display = "none";
   bacExerciceEl.innerHTML = "";
+  optimiseSection.style.display = "none";
+  btnDownloadOptimisePdf.style.display = "none";
+  optimiseContent.innerHTML = "";
   currentQCM = [];
 }
 
-// ====== Rendu BAC / ENS ======
+// ====== Rendu BAC / ENS ========================================================
 function render(data) {
   if (currentMatiere === "ens-svt") {
     lastEnsData = data;
@@ -678,7 +1327,15 @@ function render(data) {
   if (
     currentMatiere === "bac-svt" ||
     currentMatiere === "bac-maths" ||
-    currentMatiere === "bac-pc"
+    currentMatiere === "bac-pc" ||
+    currentMatiere === "bac-c-maths" ||
+    currentMatiere === "bac-c-pc" ||
+    currentMatiere === "bac-c-svt" ||
+    currentMatiere === "f4-techno" ||
+    currentMatiere === "f4-maths" ||
+    currentMatiere === "f4-dessin" ||
+    currentMatiere === "f4-physique" ||
+    toggleOptimise.checked
   ) {
     lastBacData = data;
   }
@@ -891,7 +1548,14 @@ function render(data) {
   if (
     (currentMatiere === "bac-svt" ||
       currentMatiere === "bac-maths" ||
-      currentMatiere === "bac-pc") &&
+      currentMatiere === "bac-pc" ||
+      currentMatiere === "bac-c-maths" ||
+      currentMatiere === "bac-c-pc" ||
+      currentMatiere === "f4-techno" ||
+      currentMatiere === "f4-maths" ||
+      currentMatiere === "f4-dessin" ||
+      currentMatiere === "f4-physique" ||
+      currentMatiere === "bac-c-svt") &&
     data.exercice_type_bac
   ) {
     bacExerciceSection.style.display = "block";
@@ -946,12 +1610,130 @@ function render(data) {
     bacExerciceSection.style.display = "none";
   }
 
-  if (currentMatiere === "ens-svt") {
+  if (toggleOptimise.checked) {
+    btnDownloadPdf.style.display = "none";
+    btnDownloadBacPdf.style.display = "none";
+    btnDownloadOptimisePdf.style.display = "inline-block"; // ← ajoute ici
+  } else if (currentMatiere === "ens-svt") {
     btnDownloadPdf.style.display = "inline-block";
     btnDownloadBacPdf.style.display = "none";
+    btnDownloadOptimisePdf.style.display = "none";
   } else {
     btnDownloadPdf.style.display = "none";
     btnDownloadBacPdf.style.display = "inline-block";
+    btnDownloadOptimisePdf.style.display = "none";
+  }
+
+  // ====== Mode Optimisé BAC ======
+  if (toggleOptimise.checked && data.importance) {
+    optimiseSection.style.display = "block";
+
+    const s = (v) => (v == null ? "" : String(v));
+
+    // Badge importance
+    const badgeClass =
+      data.importance === "Très fréquent"
+        ? "importance-tres-frequent"
+        : data.importance === "Important"
+          ? "importance-important"
+          : "importance-secondaire";
+
+    let html = `
+    <span class="importance-badge ${badgeClass}">
+      ⭐ ${s(data.importance)}
+    </span>
+    <p>${s(data.pourquoi_important)}</p>
+
+    <h3>📌 Compétences réellement testées</h3>
+    <ul>
+      ${(data.competences_testees || []).map((c) => `<li>${s(c)}</li>`).join("")}
+    </ul>
+
+    <h3>🧪 Types d'exercices déjà tombés</h3>
+    ${(data.types_exercices || [])
+      .map(
+        (t) => `
+      <div style="margin-bottom: 10px;">
+        <strong>${s(t.type)}</strong>
+        <span class="importance-badge ${
+          t.frequence === "Très fréquent"
+            ? "importance-tres-frequent"
+            : t.frequence === "Fréquent"
+              ? "importance-important"
+              : "importance-secondaire"
+        }" style="margin-left: 8px; font-size: 11px;">
+          ${s(t.frequence)}
+        </span>
+        <p style="margin: 4px 0 0 0; font-size: 13px;">${s(t.description)}</p>
+      </div>
+    `,
+      )
+      .join("")}
+
+    <h3>⚠️ Pièges fréquents</h3>
+    <ul>
+      ${(data.pieges_frequents || []).map((p) => `<li>${s(p)}</li>`).join("")}
+    </ul>
+
+    <h3>💡 Conseils pour l'examen</h3>
+    <ul>
+      ${(data.conseils_examen || []).map((c) => `<li>${s(c)}</li>`).join("")}
+    </ul>
+
+    <h3>📝 Exercice type BAC + Corrigé</h3>
+    <div class="longq">
+      <h4>Consigne</h4>
+      <p>${s(data.exercice_optimise?.consigne)}</p>
+      <h4>Énoncé</h4>
+      <p>${s(data.exercice_optimise?.enonce)}</p>
+      <h4>Questions</h4>
+      <ol>
+        ${(data.exercice_optimise?.questions || [])
+          .map(
+            (q) => `
+          <li>
+            ${s(q.question)}
+            <em style="color: var(--accent)"> (${s(q.bareme)} pts)</em>
+          </li>
+        `,
+          )
+          .join("")}
+      </ol>
+      <h4>Corrigé</h4>
+      <ol>
+        ${(data.exercice_optimise?.corrige?.reponses || [])
+          .map(
+            (r) => `
+          <li>${s(r.reponse)}</li>
+        `,
+          )
+          .join("")}
+      </ol>
+      <p>
+  <strong style="color: var(--accent)">
+    Barème total : ${s(data.exercice_optimise?.corrige?.bareme_total)} pts
+  </strong>
+</p>
+<div style="margin-top: 10px;">
+  <strong>Détail du barème :</strong>
+  ${(data.exercice_optimise?.corrige?.bareme_detail || [])
+    .map(
+      (b) => `
+    <div style="display:flex; justify-content:space-between; 
+                padding: 4px 0; border-bottom: 1px solid var(--border)">
+      <span>${s(b.critere)}</span>
+      <strong style="color: var(--accent)">${s(b.points)} pts</strong>
+    </div>
+  `,
+    )
+    .join("")}
+</div>
+    </div>
+  `;
+
+    optimiseContent.innerHTML = html;
+  } else {
+    optimiseSection.style.display = "none";
   }
 }
 
@@ -986,13 +1768,13 @@ btnGenerate.addEventListener("click", async () => {
   }, 100);
 
   const text = inputText.value;
-
-  const mode = currentMatiere; // "bac" ou "ens"
-  const language = langEl.value; // "fr" ou "en"
+  const language = langEl.value;
+  const mode = currentMatiere;
+  const isOptimise = toggleOptimise.checked;
 
   currentMode = currentMatiere;
 
-  if (currentMode === "ens") {
+  if (currentMode === "ens-svt") {
     badgeEns.classList.add("active");
     badgeBac.classList.remove("active");
   } else {
@@ -1004,18 +1786,51 @@ btnGenerate.addEventListener("click", async () => {
     "bac-svt": "/generate",
     "bac-maths": "/generate-maths",
     "bac-pc": "/generate-pc",
+    "bac-c-maths": "/generate-maths",
+    "bac-c-pc": "/generate-pc",
+    "bac-c-svt": "/generate",
+    "bac-a-francais": "/generate-bac-a-francais",
+    "bac-a-philo": "/generate-bac-a-philo",
+    "bac-a-histoire-geo": "/generate-bac-a-histoire-geo",
+
+    // ===== BAC TECH F4 ======
+    "f4-techno": "/generate-f4-techno",
+    "f4-maths": "/generate-f4-maths",
+    "f4-dessin": "/generate-f4-dessin",
+    "f4-physique": "/generate-f4-physique",
+
+    // ==== Conours ENS ======
     "ens-svt": "/generate-ens",
   };
 
-  // === garde pour test en local ====
-  //const BASE = "http://localhost:3000";
+  const ROUTES_OPTIMISE = {
+    "bac-svt": "/generate-optimise",
+    "bac-maths": "/generate-optimise",
+    "bac-pc": "/generate-optimise",
+    "bac-c-maths": "/generate-optimise",
+    "bac-c-pc": "/generate-optimise",
+    "bac-c-svt": "/generate-optimise",
+    "bac-a-francais": "/generate-optimise",
+    "bac-a-philo": "/generate-optimise",
+    "bac-a-histoire-geo": "/generate-optimise",
 
-  // ==== Production ========
+    // ===== BAC TECH F4 =========
+    "f4-techno": "/generate-optimise",
+    "f4-maths": "/generate-optimise",
+    "f4-dessin": "/generate-optimise",
+    "f4-physique": "/generate-optimise",
 
-  const route = ROUTES[mode] || null;
+    // ==== Conours ENS ===========
+    "ens-svt": "/generate-optimise",
+  };
+
+  const route = isOptimise
+    ? ROUTES_OPTIMISE[mode] || null
+    : ROUTES[mode] || null;
 
   if (!route) {
     statusEl.textContent = "⏳ Cette matière arrive bientôt !";
+    clearInterval(interval);
     return;
   }
 
@@ -1157,8 +1972,6 @@ btnDownloadBacPdf.addEventListener("click", async () => {
 
     const res = await fetch(
       // ========= Mode Test ========
-      //"https://prepconcours-ai-backend.onrender.com/export-bac-pdf",
-      //"http://localhost:3000/export-bac-pdf",
 
       // ====== Mode Prod =========
       `${BASE}/export-bac-pdf`,
