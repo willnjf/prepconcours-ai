@@ -465,6 +465,7 @@ const CHAPITRES = {
     "Les esters et savons",
   ],
 
+  // ======== BAC C ==========
   "bac-c-maths": [
     "📐 1 ANALYSE",
     "◆ Limites et continuité",
@@ -512,6 +513,112 @@ const CHAPITRES = {
     "Les statistiques descriptives",
   ],
 
+  "bac-c-pc": [
+  "⚙️ 1 MÉCANIQUE",
+  "◆ Mouvement",
+  "Le mouvement rectiligne",
+  "La vitesse et l'accélération",
+
+  "◆ Dynamique",
+  "Les lois de Newton",
+  "La quantité de mouvement",
+  "Le travail et l'énergie",
+
+  "◆ Mouvement circulaire",
+  "Le mouvement circulaire uniforme",
+  "La force centripète",
+
+  "⚡ 2 ÉLECTRICITÉ",
+  "◆ Circuits électriques",
+  "La loi d'Ohm",
+  "Les lois de Kirchhoff",
+
+  "◆ Dipôles électriques",
+  "Les résistances",
+  "Les condensateurs",
+  "Les circuits RC et RLC",
+
+  "🌊 3 ONDES ET OPTIQUE",
+  "◆ Ondes",
+  "Les ondes mécaniques",
+  "La propagation des ondes",
+
+  "◆ Optique",
+  "Les lentilles minces",
+  "La formation des images",
+  "Les instruments d'optique",
+
+  "⚛️ 4 PHYSIQUE MODERNE",
+  "◆ Structure de l'atome",
+  "Les modèles atomiques",
+  "Le noyau atomique",
+
+  "◆ Radioactivité",
+  "Les types de radioactivité",
+  "Les réactions nucléaires",
+
+  "🧪 5 CHIMIE",
+  "◆ Structure de la matière",
+  "Les liaisons chimiques",
+  "Les solutions",
+
+  "◆ Réactions chimiques",
+  "Les réactions acido-basiques",
+  "Les réactions d'oxydoréduction",
+
+  "◆ Chimie organique",
+  "Les alcools",
+  "Les acides carboxyliques",
+  "Les esters"
+],
+
+  "bac-c-svt": [
+  "🧬 1 BIOLOGIE CELLULAIRE",
+  "◆ Organisation de la cellule",
+  "La cellule et ses organites",
+  "La membrane plasmique",
+  "Les échanges cellulaires",
+
+  "◆ Division cellulaire",
+  "La mitose",
+  "La méiose",
+  "Le cycle cellulaire",
+
+  "🧪 2 GÉNÉTIQUE",
+  "◆ Transmission des caractères",
+  "La génétique mendélienne",
+  "Les lois de Mendel",
+  "Les croisements génétiques",
+
+  "◆ Support de l'information génétique",
+  "L'ADN",
+  "La réplication de l'ADN",
+  "La synthèse des protéines",
+
+  "🧠 3 PHYSIOLOGIE HUMAINE",
+  "◆ Fonction de relation",
+  "Le système nerveux",
+  "Les organes des sens",
+  "La coordination nerveuse",
+
+  "◆ Fonction de reproduction",
+  "La reproduction humaine",
+  "La fécondation",
+  "Le développement embryonnaire",
+
+  "🌿 4 ÉCOLOGIE",
+  "◆ Les écosystèmes",
+  "Les relations entre les êtres vivants",
+  "Les chaînes alimentaires",
+
+  "◆ L'homme et l'environnement",
+  "La pollution",
+  "La protection de l'environnement",
+  "Le développement durable"
+],
+
+
+// ============ BAC FRANCAIS =========
   "bac-a-francais": [
     "📖 1 LANGUE ET EXPRESSION",
     "◆ Grammaire et syntaxe",

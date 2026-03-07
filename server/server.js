@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-const LIMITE_GENERATE = 100;
-const LIMITE_PDF = 100;
+const LIMITE_GENERATE = 5;
+const LIMITE_PDF = 2;
 import dotenv from "dotenv";
 import OpenAI from "openai";
 import PDFDocument from "pdfkit";
@@ -2497,8 +2497,7 @@ Texte:
       writeCache(cache);
     } catch (e) {
       return res.status(500).json({
-        error:
-          e.message || "La réponse IA F4 Dessin n'est pas un JSON valide.",
+        error: e.message || "La réponse IA F4 Dessin n'est pas un JSON valide.",
         raw,
       });
     }
