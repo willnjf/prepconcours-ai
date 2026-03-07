@@ -57,10 +57,10 @@ const btnDownloadOptimisePdf = document.getElementById(
 );
 
 // === garde pour test en local ====
-const BASE = "http://localhost:3000";
+//const BASE = "http://localhost:3000";
 
 // ===== backend ========
-//const BASE = "https://prepconcours-ai-backend.onrender.com";
+const BASE = "https://prepconcours-ai-backend.onrender.com";
 
 // Toggle ON/OFF
 toggleOptimise.addEventListener("change", () => {
