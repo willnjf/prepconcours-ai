@@ -2657,31 +2657,38 @@ app.use((req, res) => {
   res.status(404).json({ error: "Route introuvable" });
 });
 
-//Start server
-app.listen(PORT, () => {
-  console.log(`✅ Serveur démarré : http://localhost:${PORT}`);
-});
-
 // ====== Route Feedback ======
 app.post("/feedback", async (req, res) => {
   try {
     const { anonymousId, note, commentaire, matiere, chapitre } = req.body;
-    
-    // Log console
-    console.log(`📊 FEEDBACK | Note: ${note}/5 | Matière: ${matiere}`);
-    
-    // Envoyer vers Google Sheets
-    const SHEET_URL = "https://script.google.com/macros/s/AKfycbzHVBvv_3cyaWEmVRQEqMUidhfQn5zyv5dBZJSEvc5oVwehG7hWuVfgILffWwod79VILw/exec"; // ← colle ton URL ici
-    
+
+    console.log(
+      `📊 FEEDBACK | Note: ${note}/5 | Matière: ${matiere} | Commentaire: ${commentaire}`,
+    );
+
+    const SHEET_URL =
+      "https://script.google.com/macros/s/AKfycbzHVBvv_3cyaWEmVRQEqMUidhfQn5zyv5dBZJSEvc5oVwehG7hWuVfgILffWwod79VILw/exec";
+
     await fetch(SHEET_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ anonymousId, note, commentaire, matiere, chapitre })
+      body: JSON.stringify({
+        anonymousId,
+        note,
+        commentaire,
+        matiere,
+        chapitre,
+      }),
     });
-    
+
     res.json({ success: true });
   } catch (err) {
     console.error("Erreur feedback:", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
+});
+
+//Start server
+app.listen(PORT, () => {
+  console.log(`✅ Serveur démarré : http://localhost:${PORT}`);
 });
