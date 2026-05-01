@@ -56,6 +56,15 @@ const btnDownloadOptimisePdf = document.getElementById(
   "btnDownloadOptimisePdf",
 );
 
+// ====== Feedback ======
+const feedbackSection = document.getElementById("feedbackSection");
+const starsRow = document.getElementById("starsRow");
+const starLabel = document.getElementById("starLabel");
+const feedbackComment = document.getElementById("feedbackComment");
+const btnFeedback = document.getElementById("btnFeedback");
+const feedbackStatus = document.getElementById("feedbackStatus");
+let selectedStars = 0;
+
 // === garde pour test en local ====
 //const BASE = "http://localhost:3000";
 
@@ -514,111 +523,110 @@ const CHAPITRES = {
   ],
 
   "bac-c-pc": [
-  "⚙️ 1 MÉCANIQUE",
-  "◆ Mouvement",
-  "Le mouvement rectiligne",
-  "La vitesse et l'accélération",
+    "⚙️ 1 MÉCANIQUE",
+    "◆ Mouvement",
+    "Le mouvement rectiligne",
+    "La vitesse et l'accélération",
 
-  "◆ Dynamique",
-  "Les lois de Newton",
-  "La quantité de mouvement",
-  "Le travail et l'énergie",
+    "◆ Dynamique",
+    "Les lois de Newton",
+    "La quantité de mouvement",
+    "Le travail et l'énergie",
 
-  "◆ Mouvement circulaire",
-  "Le mouvement circulaire uniforme",
-  "La force centripète",
+    "◆ Mouvement circulaire",
+    "Le mouvement circulaire uniforme",
+    "La force centripète",
 
-  "⚡ 2 ÉLECTRICITÉ",
-  "◆ Circuits électriques",
-  "La loi d'Ohm",
-  "Les lois de Kirchhoff",
+    "⚡ 2 ÉLECTRICITÉ",
+    "◆ Circuits électriques",
+    "La loi d'Ohm",
+    "Les lois de Kirchhoff",
 
-  "◆ Dipôles électriques",
-  "Les résistances",
-  "Les condensateurs",
-  "Les circuits RC et RLC",
+    "◆ Dipôles électriques",
+    "Les résistances",
+    "Les condensateurs",
+    "Les circuits RC et RLC",
 
-  "🌊 3 ONDES ET OPTIQUE",
-  "◆ Ondes",
-  "Les ondes mécaniques",
-  "La propagation des ondes",
+    "🌊 3 ONDES ET OPTIQUE",
+    "◆ Ondes",
+    "Les ondes mécaniques",
+    "La propagation des ondes",
 
-  "◆ Optique",
-  "Les lentilles minces",
-  "La formation des images",
-  "Les instruments d'optique",
+    "◆ Optique",
+    "Les lentilles minces",
+    "La formation des images",
+    "Les instruments d'optique",
 
-  "⚛️ 4 PHYSIQUE MODERNE",
-  "◆ Structure de l'atome",
-  "Les modèles atomiques",
-  "Le noyau atomique",
+    "⚛️ 4 PHYSIQUE MODERNE",
+    "◆ Structure de l'atome",
+    "Les modèles atomiques",
+    "Le noyau atomique",
 
-  "◆ Radioactivité",
-  "Les types de radioactivité",
-  "Les réactions nucléaires",
+    "◆ Radioactivité",
+    "Les types de radioactivité",
+    "Les réactions nucléaires",
 
-  "🧪 5 CHIMIE",
-  "◆ Structure de la matière",
-  "Les liaisons chimiques",
-  "Les solutions",
+    "🧪 5 CHIMIE",
+    "◆ Structure de la matière",
+    "Les liaisons chimiques",
+    "Les solutions",
 
-  "◆ Réactions chimiques",
-  "Les réactions acido-basiques",
-  "Les réactions d'oxydoréduction",
+    "◆ Réactions chimiques",
+    "Les réactions acido-basiques",
+    "Les réactions d'oxydoréduction",
 
-  "◆ Chimie organique",
-  "Les alcools",
-  "Les acides carboxyliques",
-  "Les esters"
-],
+    "◆ Chimie organique",
+    "Les alcools",
+    "Les acides carboxyliques",
+    "Les esters",
+  ],
 
   "bac-c-svt": [
-  "🧬 1 BIOLOGIE CELLULAIRE",
-  "◆ Organisation de la cellule",
-  "La cellule et ses organites",
-  "La membrane plasmique",
-  "Les échanges cellulaires",
+    "🧬 1 BIOLOGIE CELLULAIRE",
+    "◆ Organisation de la cellule",
+    "La cellule et ses organites",
+    "La membrane plasmique",
+    "Les échanges cellulaires",
 
-  "◆ Division cellulaire",
-  "La mitose",
-  "La méiose",
-  "Le cycle cellulaire",
+    "◆ Division cellulaire",
+    "La mitose",
+    "La méiose",
+    "Le cycle cellulaire",
 
-  "🧪 2 GÉNÉTIQUE",
-  "◆ Transmission des caractères",
-  "La génétique mendélienne",
-  "Les lois de Mendel",
-  "Les croisements génétiques",
+    "🧪 2 GÉNÉTIQUE",
+    "◆ Transmission des caractères",
+    "La génétique mendélienne",
+    "Les lois de Mendel",
+    "Les croisements génétiques",
 
-  "◆ Support de l'information génétique",
-  "L'ADN",
-  "La réplication de l'ADN",
-  "La synthèse des protéines",
+    "◆ Support de l'information génétique",
+    "L'ADN",
+    "La réplication de l'ADN",
+    "La synthèse des protéines",
 
-  "🧠 3 PHYSIOLOGIE HUMAINE",
-  "◆ Fonction de relation",
-  "Le système nerveux",
-  "Les organes des sens",
-  "La coordination nerveuse",
+    "🧠 3 PHYSIOLOGIE HUMAINE",
+    "◆ Fonction de relation",
+    "Le système nerveux",
+    "Les organes des sens",
+    "La coordination nerveuse",
 
-  "◆ Fonction de reproduction",
-  "La reproduction humaine",
-  "La fécondation",
-  "Le développement embryonnaire",
+    "◆ Fonction de reproduction",
+    "La reproduction humaine",
+    "La fécondation",
+    "Le développement embryonnaire",
 
-  "🌿 4 ÉCOLOGIE",
-  "◆ Les écosystèmes",
-  "Les relations entre les êtres vivants",
-  "Les chaînes alimentaires",
+    "🌿 4 ÉCOLOGIE",
+    "◆ Les écosystèmes",
+    "Les relations entre les êtres vivants",
+    "Les chaînes alimentaires",
 
-  "◆ L'homme et l'environnement",
-  "La pollution",
-  "La protection de l'environnement",
-  "Le développement durable"
-],
+    "◆ L'homme et l'environnement",
+    "La pollution",
+    "La protection de l'environnement",
+    "Le développement durable",
+  ],
 
-
-// ============ BAC FRANCAIS =========
+  // ============ BAC FRANCAIS =========
   "bac-a-francais": [
     "📖 1 LANGUE ET EXPRESSION",
     "◆ Grammaire et syntaxe",
@@ -1423,6 +1431,18 @@ function clearUI() {
   btnDownloadOptimisePdf.style.display = "none";
   optimiseContent.innerHTML = "";
   currentQCM = [];
+
+  // Reset feedback
+  feedbackSection.style.display = "none";
+  feedbackStatus.textContent = "";
+  feedbackComment.value = "";
+  selectedStars = 0;
+  document
+    .querySelectorAll(".star")
+    .forEach((s) => s.classList.remove("active"));
+  starLabel.textContent = "Clique sur une étoile";
+  btnFeedback.disabled = false;
+  btnFeedback.textContent = "Envoyer mon avis 🚀";
 }
 
 // ====== Rendu BAC / ENS ========================================================
@@ -1968,6 +1988,10 @@ btnGenerate.addEventListener("click", async () => {
     statusEl.textContent = "✅ Terminé";
     render(data);
 
+    // Afficher le formulaire de feedback
+    feedbackSection.style.display = "block";
+    smoothScrollTo(feedbackSection);
+
     // === Scroll vers le résumé ===
     setTimeout(() => {
       smoothScrollTo(resumeEl);
@@ -2123,5 +2147,85 @@ btnDownloadBacPdf.addEventListener("click", async () => {
   } catch (err) {
     console.error(err);
     alert("Erreur réseau");
+  }
+});
+
+// ====== Logique Feedback ======
+const starLabels = [
+  "",
+  "Pas utile 😕",
+  "Peut mieux faire 🤔",
+  "Bien 👍",
+  "Très bien 😊",
+  "Excellent ! 🔥",
+];
+
+document.querySelectorAll(".star").forEach((star) => {
+  star.addEventListener("mouseover", () => {
+    const val = parseInt(star.dataset.value);
+    document.querySelectorAll(".star").forEach((s, i) => {
+      s.classList.toggle("active", i < val);
+    });
+    starLabel.textContent = starLabels[val];
+  });
+
+  star.addEventListener("mouseleave", () => {
+    document.querySelectorAll(".star").forEach((s, i) => {
+      s.classList.toggle("active", i < selectedStars);
+    });
+    starLabel.textContent = selectedStars
+      ? starLabels[selectedStars]
+      : "Clique sur une étoile";
+  });
+
+  star.addEventListener("click", () => {
+    selectedStars = parseInt(star.dataset.value);
+    document.querySelectorAll(".star").forEach((s, i) => {
+      s.classList.toggle("active", i < selectedStars);
+    });
+    starLabel.textContent = starLabels[selectedStars];
+  });
+});
+
+btnFeedback.addEventListener("click", async () => {
+  if (!selectedStars) {
+    feedbackStatus.textContent = "⚠️ Choisis d'abord une note !";
+    feedbackStatus.style.color = "#ef4444";
+    return;
+  }
+
+  const payload = {
+    anonymousId,
+    note: selectedStars,
+    commentaire: feedbackComment.value.trim(),
+    matiere: currentMatiere,
+    chapitre: inputText.value.trim().substring(0, 100),
+  };
+
+  try {
+    btnFeedback.disabled = true;
+    btnFeedback.textContent = "Envoi en cours...";
+
+    await fetch(`${BASE}/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    feedbackStatus.textContent =
+      "✅ Merci pour ton retour ! Ça aide à améliorer l'app 🙏";
+    feedbackStatus.style.color = "#22c55e";
+    btnFeedback.textContent = "Envoyé ✅";
+    feedbackComment.value = "";
+    selectedStars = 0;
+    document
+      .querySelectorAll(".star")
+      .forEach((s) => s.classList.remove("active"));
+    starLabel.textContent = "Clique sur une étoile";
+  } catch (err) {
+    feedbackStatus.textContent = "❌ Erreur envoi, réessaie.";
+    feedbackStatus.style.color = "#ef4444";
+    btnFeedback.disabled = false;
+    btnFeedback.textContent = "Envoyer mon avis 🚀";
   }
 });

@@ -24,8 +24,8 @@
       <h1>Prepa Baccalauréat & Concours Nationaux 🇨🇲</h1>
       <p id="aide">
         💡 <strong>Comment utiliser PrepConcours AI ?</strong><br />
-        1️⃣ Choisis ta <strong>catégorie</strong>, ta <strong>série</strong> et
-        ta <strong>matière</strong>.<br />
+        1️⃣ Choisis ta <strong>catégorie</strong>, ta <strong>série</strong> et ta
+        <strong>matière</strong>.<br />
         2️⃣ <strong>Sélectionne un chapitre</strong> dans la liste
         <em>ou</em> colle ton cours.<br />
         3️⃣ Clique sur <strong>Générer</strong> et reçois ta fiche en 30 secondes
@@ -191,6 +191,30 @@
       </div>
 
       <p id="status" class="status"></p>
+
+      <!-- ====== FEEDBACK ====== -->
+      <section
+        class="card feedback-section"
+        id="feedbackSection"
+        style="display: none"
+      >
+        <h2>💬 Cette fiche t'a-t-elle aidé ?</h2>
+        <div class="stars-row" id="starsRow">
+          <span class="star" data-value="1">⭐</span>
+          <span class="star" data-value="2">⭐</span>
+          <span class="star" data-value="3">⭐</span>
+          <span class="star" data-value="4">⭐</span>
+          <span class="star" data-value="5">⭐</span>
+        </div>
+        <p id="starLabel" class="star-label">Clique sur une étoile</p>
+        <textarea
+          id="feedbackComment"
+          placeholder="Un commentaire ? (facultatif)"
+          rows="3"
+        ></textarea>
+        <button id="btnFeedback" type="button">Envoyer mon avis 🚀</button>
+        <p id="feedbackStatus"></p>
+      </section>
     </main>
 
     <script src="./lang.js"></script>

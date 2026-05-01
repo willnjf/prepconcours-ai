@@ -2661,3 +2661,24 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Serveur démarré : http://localhost:${PORT}`);
 });
+
+// ====== Route Feedback ======
+app.post("/feedback", async (req, res) => {
+  try {
+    const { anonymousId, note, commentaire, matiere, chapitre } = req.body;
+    
+    // Log dans la console (visible dans Render logs)
+    console.log(`📊 FEEDBACK | ID: ${anonymousId} | Note: ${note}/5 | Matière: ${matiere} | Chapitre: ${chapitre} | Commentaire: ${commentaire}`);
+    
+    // Option : sauvegarder dans un fichier JSON local
+    // const fs = require('fs');
+    // const feedbacks = JSON.parse(fs.readFileSync('./feedbacks.json', 'utf8') || '[]');
+    // feedbacks.push({ anonymousId, note, commentaire, matiere, chapitre, date: new Date().toISOString() });
+    // fs.writeFileSync('./feedbacks.json', JSON.stringify(feedbacks, null, 2));
+    
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Erreur feedback:", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});

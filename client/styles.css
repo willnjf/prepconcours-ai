@@ -812,3 +812,56 @@ input:checked + .toggle-slider:before {
   color: #9ca3af;
   border: 1px solid #9ca3af;
 }
+
+/* ====== FEEDBACK ====== */
+.feedback-section {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.stars-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 16px 0 8px;
+  cursor: pointer;
+}
+
+.star {
+  font-size: 36px;
+  opacity: 0.3;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.star.active,
+.star:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.star-label {
+  font-size: 14px;
+  color: var(--text-secondary, #888);
+  margin-bottom: 12px;
+  min-height: 20px;
+}
+
+#feedbackComment {
+  width: 100%;
+  max-width: 500px;
+  margin: 8px auto 16px;
+  display: block;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #ccc);
+  background: var(--card-bg, #fff);
+  color: #333333;
+  font-size: 14px;
+  resize: vertical;
+}
+
+#feedbackStatus {
+  margin-top: 10px;
+  font-weight: 600;
+  min-height: 20px;
+}
