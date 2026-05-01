@@ -2667,14 +2667,17 @@ app.post("/feedback", async (req, res) => {
   try {
     const { anonymousId, note, commentaire, matiere, chapitre } = req.body;
     
-    // Log dans la console (visible dans Render logs)
-    console.log(`📊 FEEDBACK | ID: ${anonymousId} | Note: ${note}/5 | Matière: ${matiere} | Chapitre: ${chapitre} | Commentaire: ${commentaire}`);
+    // Log console
+    console.log(`📊 FEEDBACK | Note: ${note}/5 | Matière: ${matiere}`);
     
-    // Option : sauvegarder dans un fichier JSON local
-    // const fs = require('fs');
-    // const feedbacks = JSON.parse(fs.readFileSync('./feedbacks.json', 'utf8') || '[]');
-    // feedbacks.push({ anonymousId, note, commentaire, matiere, chapitre, date: new Date().toISOString() });
-    // fs.writeFileSync('./feedbacks.json', JSON.stringify(feedbacks, null, 2));
+    // Envoyer vers Google Sheets
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbzHVBvv_3cyaWEmVRQEqMUidhfQn5zyv5dBZJSEvc5oVwehG7hWuVfgILffWwod79VILw/exec"; // ← colle ton URL ici
+    
+    await fetch(SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ anonymousId, note, commentaire, matiere, chapitre })
+    });
     
     res.json({ success: true });
   } catch (err) {
