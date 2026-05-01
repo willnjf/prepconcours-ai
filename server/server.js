@@ -2652,11 +2652,6 @@ Texte:
   }
 });
 
-// 404 fallback (pratique)
-app.use((req, res) => {
-  res.status(404).json({ error: "Route introuvable" });
-});
-
 // ====== Route Feedback ======
 app.post("/feedback", async (req, res) => {
   try {
@@ -2687,6 +2682,12 @@ app.post("/feedback", async (req, res) => {
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
+
+// 404 fallback (pratique)
+app.use((req, res) => {
+  res.status(404).json({ error: "Route introuvable" });
+});
+
 
 //Start server
 app.listen(PORT, () => {
