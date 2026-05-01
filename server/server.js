@@ -2660,9 +2660,8 @@ app.post("/feedback", async (req, res) => {
     console.log(
       `📊 FEEDBACK | Note: ${note}/5 | Matière: ${matiere} | Commentaire: ${commentaire}`,
     );
-
     const SHEET_URL =
-      "https://script.google.com/macros/s/AKfycbyP9y50vQ_wwwOknfp4iB6JFBM-nUMS9DfJUzRk_EsebzFgqGaGy7Ckl3y5GAXr3KqP/exec";
+      "https://script.google.com/macros/s/AKfycbwhSgg2QgqOLsJ0hojus2XS18M7aAFSy3xH5L_6TjMor6Ym_PqlHyxMa06rVYXnSSSE/exec";
     await fetch(SHEET_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
